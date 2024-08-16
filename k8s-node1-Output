@@ -1,0 +1,51 @@
+  153  swapoff -a
+  154  systemctl status firewalld ; systemctl stop firewalld ; systemctl disable firewalld;systemctl status firewalld
+  155  systemctl status firewalld.service 
+  156  clear
+  157  getenforce 
+  158  setenforce 0
+  159  getenforce 
+  160  yum install wget -y
+  161  wget https://download.docker.com/linux/centos/7/x86_64/stable/Packages/containerd.io-1.6.10-3.1.el7.x86_64.rpm
+  162  yum localinstall containerd.io-1.6.10-3.1.el7.x86_64.rpm -y
+  163  systemctl start  containerd.service; systemctl enable containerd.service; systemctl status containerd.service
+  164  systemctl status containerd.service
+  165  clear
+  166  cat <<EOF | sudo tee /etc/modules-load.d/k8s.conf
+overlay
+br_netfilter
+EOF
+
+  167  modprobe overlay; sudo modprobe br_netfilter
+  168  cat <<EOF | sudo tee /etc/sysctl.d/k8s.conf
+net.bridge.bridge-nf-call-iptables  = 1
+net.bridge.bridge-nf-call-ip6tables = 1
+net.ipv4.ip_forward                 = 1
+EOF
+
+  169  sudo sysctl --system
+  170  cat <<EOF | sudo tee /etc/yum.repos.d/kubernetes.repo
+[kubernetes]
+name=Kubernetes
+baseurl=https://pkgs.k8s.io/core:/stable:/v1.29/rpm/
+enabled=1
+gpgcheck=1
+gpgkey=https://pkgs.k8s.io/core:/stable:/v1.29/rpm/repodata/repomd.xml.key
+exclude=kubelet kubeadm kubectl cri-tools kubernetes-cni
+EOF
+
+  171  clear
+  172  sed -i 's/^SELINUX=enforcing$/SELINUX=permissive/' /etc/selinux/config
+  173  yum install -y kubelet kubeadm kubectl --disableexcludes=kubernetes
+  174  systemctl enable --now kubelet
+  175  clear
+  176  rm /etc/containerd/config.toml
+  177  systemctl restart containerd.service
+  178  kubeadm init phase preflight
+  179  cd /etc/yum.repos.d/
+  180  ls -lrt
+  181  cat kubernetes.repo 
+  182  cd /
+  183  clear
+  184  kubeadm join 10.0.11.167:6443 --token rift60.vcaj6b3cikwannoc --discovery-token-ca-cert-hash sha256:0703c6c516494d9d71b455a94b3e306dedebc01e9267f5f3b06b2f3720222398
+  185  history
