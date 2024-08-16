@@ -1,33 +1,24 @@
 Pre-requisite:
-    
 #yum remove -y podman-docker  
 
 K8S Cluster Install:
-    
 Kubernetes Cluster Setup Installation - 1Master, 2WorkerNodes:
- 
- Note:  All the below commands should be executed in all 3 Nodes:   
+Note:  All the below commands should be executed in all 3 Nodes:   
 
 # cat /etc/hosts
 127.0.0.1   localhost localhost.localdomain localhost4 localhost4.localdomain4
 ::1         localhost localhost.localdomain localhost6 localhost6.localdomain6q
-
 10.0.7.1    master master          (take IP from "ip a" command and place it here)
 10.0.7.2    node1 worker1          (take IP from "ip a" command and place it here)
 10.0.7.3    node2 worker2          (take IP from "ip a" command and place it here)
 
 #swapoff -a
-
 #systemctl stop firewalld ; systemctl disable firewalld; systemctl status firewalld
-
 #setenforce 0
 
 #yum install wget -y 
-
 #wget https://download.docker.com/linux/centos/7/x86_64/stable/Packages/containerd.io-1.6.10-3.1.el7.x86_64.rpm
-
 #yum localinstall containerd.io-1.6.10-3.1.el7.x86_64.rpm -y
-
 #systemctl start  containerd.service; systemctl enable containerd.service; systemctl status containerd.service
 
 #cat<<EOF | sudo tee /etc/modules-load.d/k8s.conf
@@ -36,9 +27,6 @@ br_netfilter
 EOF
 
 # modprobe overlay; sudo modprobe br_netfilter
-
-
-
 #cat<<EOF | sudo tee /etc/sysctl.d/k8s.conf
 net.bridge.bridge-nf-call-iptables  = 1
 net.bridge.bridge-nf-call-ip6tables = 1
@@ -46,34 +34,24 @@ net.ipv4.ip_forward                 = 1
 EOF
 
 #sudo sysctl --system
-      
-cat<<EOF| sudo tee /etc/yum.repos.d/kubernetes.repo
-[kubernetes]
-name=Kubernetes
-baseurl=https://pkgs.k8s.io/core:/stable:/v1.29/rpm/
-enabled=1
-gpgcheck=1
-gpgkey=https://pkgs.k8s.io/core:/stable:/v1.29/rpm/repodata/repomd.xml.key
-exclude=kubelet kubeadm kubectl cri-tools kubernetes-cni
-EOF
-      
-      
-      
-      
-
-
+#cat<<EOF| sudo tee /etc/yum.repos.d/kubernetes.repo
+ [kubernetes]
+ name=Kubernetes
+ baseurl=https://pkgs.k8s.io/core:/stable:/v1.29/rpm/
+ enabled=1
+ gpgcheck=1
+ gpgkey=https://pkgs.k8s.io/core:/stable:/v1.29/rpm/repodata/repomd.xml.key
+ exclude=kubelet kubeadm kubectl cri-tools kubernetes-cni
+ EOF
+ 
 #sed -i 's/^SELINUX=enforcing$/SELINUX=permissive/' /etc/selinux/config
-
-
 #yum install -y kubelet kubeadm kubectl --disableexcludes=kubernetes
-
 #systemctl enable --now kubelet
 
 Note:  The below command for Pre-Flight - It will show us if the previous commands configured properly:  This should also be executed 
             in all 3 nodes
 
 #kubeadm init phase preflight
-
 Note: IF there is any error in above command, follow below steps
 
 [root@master ~]# kubeadm init phase preflight
@@ -88,78 +66,54 @@ To see the stack trace of this error execute with --v=5 or higher
 Note:  The above is known error:  To fix, please follow the below commands:
 
 #rm /etc/containerd/config.toml
-
 #systemctl restart containerd.service
 
 Now preflight ...
-
 #kubeadm init phase preflight
-
-
--=======================================================================================================
+=======================================================================================================
 Should be run only in Master Node:
 ========================================================================================================
 
 master#kubeadm init --pod-network-cidr=192.168.0.0/24    --> Please note that the output of this command should be saved in a file on master node:
-
 .....
-
 Your Kubernetes control-plane has initialized successfully!
 
 To start using your cluster, you need to run the following as a regular user:192.168.0.60  master1.example.com  master1
 192.168.0.59  master1.example.com  master2
 192.168.0.61  node2.example.com node2
 192.168.0.62  node3.example.com node3
-
-
   mkdir -p $HOME/.kube
   sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
   sudo chown $(id -u):$(id -g) $HOME/.kube/config
 
 Alternatively, if you are the root user, you can run:
-
-  export KUBECONFIG=/etc/kubernetes/admin.conf
-
+export KUBECONFIG=/etc/kubernetes/admin.conf
 You should now deploy a pod network to the cluster.
 Run "kubectl apply -f [podnetwork].yaml" with one of the options listed at:
   https://kubernetes.io/docs/concepts/cluster-administration/addons/
-
 Then you can join any number of worker nodes by running the following on each as root:
-
 kubeadm join 10.128.0.10:6443 --token x5x7o7.25dctlxi91sg6jqn --discovery-token-ca-cert-hash sha256:eb69c97473f2f7b0de6286230449b8f94ed92dd9d55c02e3c7453e1
-
-=============
-
+========================================================================================================
 master#export KUBECONFIG=/etc/kubernetes/admin.conf
-
 
 [root@master ~]# kubectl get node
 NAME                   STATUS     ROLES           AGE    VERSION
 master   NotReady   control-plane   2m5s   v1.25.4
-[root@master ~]#
 
 [root@master ~]# kubectl get pod -A
 NAMESPACE     NAME                                           READY   STATUS    RESTARTS   AGE
 kube-system   coredns-565d847f94-9ffg6                       0/1     Pending   0          4m33s
 kube-system   coredns-565d847f94-hfk2t                       0/1     Pending   0          4m33s
-
-
-
-=======
-
-
+========================================================================================================
 wget https://raw.githubusercontent.com/flannel-io/flannel/master/Documentation/kube-flannel.yml
-
-=======
-
+========================================================================================================
 [root@master ~]# vim kube-flannel.yml      -->> Change this file with below subnet (which is already we have used while init command)
       "Network": "192.168.0.0/24",       ====> change here for our requried pod network
       "Backend": {
         "Type": "vxlan"
       }
     }
-========
-
+========================================================================================================
 [root@master ~]# kubectl create -f kube-flannel.yml
 namespace/kube-flannel created
 clusterrole.rbac.authorization.k8s.io/flannel created
@@ -167,31 +121,23 @@ clusterrolebinding.rbac.authorization.k8s.io/flannel created
 serviceaccount/flannel created
 configmap/kube-flannel-cfg created
 daemonset.apps/kube-flannel-ds created
-[root@master ~]#
-
-
 
 [root@master ~]# kubectl get pod -A
 NAMESPACE      NAME                                           READY   STATUS    RESTARTS   AGE
 kube-flannel   kube-flannel-ds-plr6g                          1/1     Running   0          30s
 kube-system    coredns-565d847f94-9ffg6                       1/1     Running   0          16m
 kube-system    coredns-565d847f94-hfk2t                       1/1     Running   0          16m
-
-===
-
+========================================================================================================
 Now Master is ready:
 [root@master ~]# kubectl get node
 NAME                   STATUS   ROLES           AGE   VERSION
 master  Ready    control-plane   17m   v1.25.4
-[root@master ~]#
-
 
 Joining worker node1: 
-===============
+========================================================================================================
 In Worker1 node:  -> "take the below command from your earlier kubeadm init ... output"
-===============
+========================================================================================================
 [root@node1 ~]# kubeadm join 10.0.7.1:6443 --token xf3lrl.fb7cniz8139fhvwx --discovery-token-ca-cert-hash sha256:1abb0f47f36b68ba0ce1e2373ab30515f87e936e2f334feb643aeee1ed0529f2
-
 Error in Flannel:
 
 [root@master ~]# kubectl get pod -A
@@ -202,13 +148,10 @@ kube-system    coredns-565d847f94-9ffg6                       1/1     Running   
 kube-system    coredns-565d847f94-hfk2t                       1/1     Running   0             19m
 
 Note: To fix the error, use below patch command:
-
 Note: The below command should be done only on Master node:
 
 [root@master ~]# kubectl patch node worker1 -p '{"spec":{"podCIDR":"192.168.0.0/24"}}'
 node/node1 patched
-[root@master ~]#
-
 
 [root@master ~]# kubectl get pod -A
 NAMESPACE      NAME                                           READY   STATUS    RESTARTS        AGE
@@ -216,31 +159,25 @@ kube-flannel   kube-flannel-ds-plr6g                          1/1     Running   
 kube-flannel   kube-flannel-ds-rtfwv                          1/1     Running   6 (2m56s ago)   6m29s
 kube-system    coredns-565d847f94-9ffg6                       1/1     Running   0               24m
 kube-system    coredns-565d847f94-hfk2t                       1/1     Running   0               24m
-
-
-
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~``
 Now joining worker2 node:
- 
 
 [root@node2 mnt]# rm /etc/containerd/config.toml
 rm: remove regular file '/etc/containerd/config.toml'? y
 [root@node2 mnt]# systemctl restart containerd.service
-[root@node2 mnt]#
-
 
 [root@node2 mnt]# kubeadm join 10.0.7.1:6443 --token xf3lrl.fb7cniz8139fhvwx --discovery-token-ca-cert-hash sha256:1abb0f47f36b68ba0ce1e2373ab30515f87e936e2f334feb643aeee1ed0529f2
-
 
 [root@master ~]# kubectl get node
 NAME                    STATUS   ROLES           AGE   VERSION
 master    Ready    control-plane   32m   v1.25.4
 node1   Ready    <none>          13m   v1.25.4
 node2   Ready    <none>          65s   v1.25.4
+
 [root@master ~]# kubectl get pod -A
 NAMESPACE      NAME                                           READY   STATUS    RESTARTS      AGE
 kube-flannel   kube-flannel-ds-66rzn                          0/1     Error     3 (37s ago)   91s
 kube-flannel   kube-flannel-ds-plr6g                          1/1     Running   0             16m
-
 
 This needs to be patched to fix flannel error:
 
