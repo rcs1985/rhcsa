@@ -1,9 +1,8 @@
-K8s installation
 Pre-requisite:
     
 #yum remove -y podman-docker  
 
-Cluster Install:
+K8S Cluster Install:
     
 Kubernetes Cluster Setup Installation - 1Master, 2WorkerNodes:
  
@@ -11,15 +10,15 @@ Kubernetes Cluster Setup Installation - 1Master, 2WorkerNodes:
 
 # cat /etc/hosts
 127.0.0.1   localhost localhost.localdomain localhost4 localhost4.localdomain4
-::1         localhost localhost.localdomain localhost6 localhost6.localdomain6
+::1         localhost localhost.localdomain localhost6 localhost6.localdomain6q
 
-10.0.7.1    master master
-10.0.7.2    node1 worker1
-10.0.7.3    node2 worker2
+10.0.7.1    master master          (take IP from "ip a" command and place it here)
+10.0.7.2    node1 worker1          (take IP from "ip a" command and place it here)
+10.0.7.3    node2 worker2          (take IP from "ip a" command and place it here)
 
 #swapoff -a
 
-#systemctl status firewalld ; systemctl stop firewalld ; systemctl disable firewalld
+#systemctl stop firewalld ; systemctl disable firewalld; systemctl status firewalld
 
 #setenforce 0
 
@@ -31,7 +30,7 @@ Kubernetes Cluster Setup Installation - 1Master, 2WorkerNodes:
 
 #systemctl start  containerd.service; systemctl enable containerd.service; systemctl status containerd.service
 
-#cat <<EOF | sudo tee /etc/modules-load.d/k8s.conf
+#cat<<EOF | sudo tee /etc/modules-load.d/k8s.conf
 overlay
 br_netfilter
 EOF
@@ -40,15 +39,15 @@ EOF
 
 
 
-#cat <<EOF | sudo tee /etc/sysctl.d/k8s.conf
+#cat<<EOF | sudo tee /etc/sysctl.d/k8s.conf
 net.bridge.bridge-nf-call-iptables  = 1
 net.bridge.bridge-nf-call-ip6tables = 1
 net.ipv4.ip_forward                 = 1
 EOF
 
 #sudo sysctl --system
-
-#cat <<EOF | sudo tee /etc/yum.repos.d/kubernetes.repo
+      
+cat<<EOF| sudo tee /etc/yum.repos.d/kubernetes.repo
 [kubernetes]
 name=Kubernetes
 baseurl=https://pkgs.k8s.io/core:/stable:/v1.29/rpm/
@@ -57,6 +56,10 @@ gpgcheck=1
 gpgkey=https://pkgs.k8s.io/core:/stable:/v1.29/rpm/repodata/repomd.xml.key
 exclude=kubelet kubeadm kubectl cri-tools kubernetes-cni
 EOF
+      
+      
+      
+      
 
 
 #sed -i 's/^SELINUX=enforcing$/SELINUX=permissive/' /etc/selinux/config
@@ -103,7 +106,11 @@ master#kubeadm init --pod-network-cidr=192.168.0.0/24    --> Please note that th
 
 Your Kubernetes control-plane has initialized successfully!
 
-To start using your cluster, you need to run the following as a regular user:
+To start using your cluster, you need to run the following as a regular user:192.168.0.60  master1.example.com  master1
+192.168.0.59  master1.example.com  master2
+192.168.0.61  node2.example.com node2
+192.168.0.62  node3.example.com node3
+
 
   mkdir -p $HOME/.kube
   sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
@@ -145,7 +152,7 @@ wget https://raw.githubusercontent.com/flannel-io/flannel/master/Documentation/k
 
 =======
 
-[root@master ~]# cat kube-flannel.yml | grep -A10 Network
+[root@master ~]# vim kube-flannel.yml      -->> Change this file with below subnet (which is already we have used while init command)
       "Network": "192.168.0.0/24",       ====> change here for our requried pod network
       "Backend": {
         "Type": "vxlan"
