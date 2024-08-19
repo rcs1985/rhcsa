@@ -1,6 +1,16 @@
 if node not showing on kubectl get nodes try below steps
 1) swapoff -a
 2) systemctl stop kubelet;systemctl star kubelet;systemct enable kubelet
+    Check the value of the “Active” field:
+    “active (running)” means the kubelet is operational.
+    “active (exited)” means the kubelet exited (probably in error). Restart it.
+    “inactive (dead)” means the kubelet crashed2.
 3) or rejoin node first create token on master node by below command and then run init command on nodes
     kueadm token create --print-join-command
-    
+4)Inspect the node logs for errors or warnings that might indicate issues. You can use: 
+    kubectl describe node <node-name>
+     Look at the Conditions section to see if there are any specific issues listed, 
+     such as OutOfDisk, MemoryPressure, DiskPressure, or NetworkUnavailable.
+     check disk space,network connectivity,memory and cpu utilization on both nodes
+5) Check Pod Logs journalctl -u kubelet
+
