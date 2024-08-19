@@ -1,0 +1,6 @@
+if node not showing on kubectl get nodes try below steps
+1) swapoff -a
+2) systemctl stop kubelet;systemctl star kubelet;systemct enable kubelet
+3) or rejoin node first create token on master node by below command and then run init command on nodes
+    kueadm token create --print-join-command
+    
