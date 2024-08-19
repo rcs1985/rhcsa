@@ -150,7 +150,7 @@ kube-system    coredns-565d847f94-hfk2t                       1/1     Running   
 Note: To fix the error, use below patch command:
 Note: The below command should be done only on Master node:
 
-[root@master ~]# kubectl patch node worker1 -p '{"spec":{"podCIDR":"192.168.0.0/24"}}'
+[root@master ~]# kubectl patch node node1 -p '{"spec":{"podCIDR":"192.168.0.0/24"}}'
 node/node1 patched
 
 [root@master ~]# kubectl get pod -A
@@ -183,4 +183,18 @@ This needs to be patched to fix flannel error:
 
 [root@master ~]# kubectl patch node node2 -p '{"spec":{"podCIDR":"192.168.0.0/24"}}'
 node/node2 patched
-[root@master ~]#
+[root@master ~]#kubectl get pod -A -o wide
+AMESPACE      NAME                             READY   STATUS    RESTARTS       AGE     IP            NODE     NOMINATED NODE   READINESS GATES
+kube-flannel   kube-flannel-ds-586r8            1/1     Running   1 (2d4h ago)   2d23h   10.0.11.167   master   <none>           <none>
+kube-flannel   kube-flannel-ds-gkx8p            1/1     Running   8 (2d4h ago)   2d23h   10.0.11.168   node1    <none>           <none>
+kube-flannel   kube-flannel-ds-kxkt4            1/1     Running   8 (2d4h ago)   2d23h   10.0.11.169   node2    <none>           <none>
+kube-system    coredns-76f75df574-kpkf6         1/1     Running   1 (2d4h ago)   2d23h   192.168.0.2   master   <none>           <none>
+kube-system    coredns-76f75df574-ntblz         1/1     Running   1 (2d4h ago)   2d23h   192.168.0.3   master   <none>           <none>
+kube-system    etcd-master                      1/1     Running   1 (2d4h ago)   2d23h   10.0.11.167   master   <none>           <none>
+kube-system    kube-apiserver-master            1/1     Running   1 (2d4h ago)   2d23h   10.0.11.167   master   <none>           <none>
+kube-system    kube-controller-manager-master   1/1     Running   1 (2d4h ago)   2d23h   10.0.11.167   master   <none>           <none>
+kube-system    kube-proxy-7cs7v                 1/1     Running   1 (2d4h ago)   2d23h   10.0.11.168   node1    <none>           <none>
+kube-system    kube-proxy-7wfw8                 1/1     Running   1 (2d4h ago)   2d23h   10.0.11.169   node2    <none>           <none>
+kube-system    kube-proxy-c6nnl                 1/1     Running   1 (2d4h ago)   2d23h   10.0.11.167   master   <none>           <none>
+kube-system    kube-scheduler-master            1/1     Running   1 (2d4h ago)   2d23h   10.0.11.167   master   <none>           <none>
+
