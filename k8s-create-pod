@@ -184,3 +184,14 @@ myapps-rs-pxpq6   1/1     Running   0          15s     192.168.0.3   node2   <no
 myapps-rs-z68rr   1/1     Running   0          15s     192.168.0.3   node1   <none>           <none>
 myweb2            1/1     Running   0          69m     192.168.0.2   node1   <none>           <none>
 
+[root@master ~]# kubectl delete pod myapps-rs-cwqpw
+pod "myapps-rs-cwqpw" deleted
+[root@master ~]# kubectl get pods -o wide
+NAME              READY   STATUS    RESTARTS   AGE    IP            NODE    NOMINATED NODE   READINESS GATES
+myapps-rs-kstpw   1/1     Running   0          8m9s   192.168.0.4   node1   <none>           <none>
+myapps-rs-pxpq6   1/1     Running   0          8m9s   192.168.0.3   node2   <none>           <none>
+myapps-rs-x5f5s   1/1     Running   0          4s     192.168.0.4   node2   <none>           <none>
+myapps-rs-z68rr   1/1     Running   0          8m9s   192.168.0.3   node1   <none>           <none>
+myweb2            1/1     Running   0          77m    192.168.0.2   node1   <none>           <none>
+
+
