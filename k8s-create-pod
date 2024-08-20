@@ -193,5 +193,102 @@ myapps-rs-pxpq6   1/1     Running   0          8m9s   192.168.0.3   node2   <non
 myapps-rs-x5f5s   1/1     Running   0          4s     192.168.0.4   node2   <none>           <none>
 myapps-rs-z68rr   1/1     Running   0          8m9s   192.168.0.3   node1   <none>           <none>
 myweb2            1/1     Running   0          77m    192.168.0.2   node1   <none>           <none>
+========================================================================================================
+[root@master ~]# kubectl delete rs myapps-rs
+replicaset.apps "myapps-rs" deleted
+[root@master ~]# kubectl get pod
+NAME     READY   STATUS    RESTARTS   AGE
+myweb2   1/1     Running   0          161m
+[root@master ~]# kubectl delete pod myweb2
+pod "myweb2" deleted
+[root@master ~]# kubectl get pod
+No resources found in default namespace.
+
+[root@master ~]# vim deployment.yml
+[root@master ~]# kubectl create -f deployment.yml
+deployment.apps/myapps-dep created
+
+[root@master ~]# kubectl get pod -o wide -w 
+NAME                         READY   STATUS    RESTARTS   AGE   IP            NODE    NOMINATED NODE   READINESS GATES
+myapps-dep-b95659446-7xr4g   1/1     Running   0          14s   192.168.0.6   node2   <none>           <none>
+myapps-dep-b95659446-h2hv4   1/1     Running   0          14s   192.168.0.5   node1   <none>           <none>
+myapps-dep-b95659446-mtrmk   1/1     Running   0          14s   192.168.0.5   node2   <none>           <none>
+myapps-dep-b95659446-n4nt5   1/1     Running   0          14s   192.168.0.6   node1   <none>           <none>
+
+[root@master ~]# kubectl get pod
+NAME                         READY   STATUS    RESTARTS   AGE
+myapps-dep-b95659446-7xr4g   1/1     Running   0          27s
+myapps-dep-b95659446-h2hv4   1/1     Running   0          27s
+myapps-dep-b95659446-mtrmk   1/1     Running   0          27s
+myapps-dep-b95659446-n4nt5   1/1     Running   0          27s
+
+Apply a change now on the file:
+[root@master ~]# vim deployment.yml
+apiVersion: apps/v1
+kind: Deployment
+metadata: 
+  name: myapps-dep
+  labels:
+    app: myapp
+    type: front-end
+spec:
+  template:
+    metadata:
+      name: myapp-dep-pod
+      labels:
+        app: myapp-dep
+        type: front-end
+    spec:
+      containers:
+      - image: httpd  --> applied
+        name: mycont
+  replicas: 4
+  selector:
+    matchLabels:
+      type: front-end
+[root@master ~]# vim deployment.yml
+
+[root@master ~]# kubectl apply -f deployment.yml
+Warning: resource deployments/myapps-dep is missing the kubectl.kubernetes.io/last-applied-configuration annotation which is required by kubectl apply. kubectl apply should only be used on resources created declaratively by either kubectl create --save-config or kubectl apply. The missing annotation will be patched automatically.
+deployment.apps/myapps-dep configured
+
+[root@master ~]# kubectl get pod
+NAME                          READY   STATUS              RESTARTS   AGE
+myapps-dep-7f7cf8d6d6-9985l   1/1     Running             0          11s
+myapps-dep-7f7cf8d6d6-p75dg   1/1     Running             0          10s
+myapps-dep-7f7cf8d6d6-p8nhj   0/1     ContainerCreating   0          7s
+myapps-dep-7f7cf8d6d6-t2km6   0/1     ContainerCreating   0          2s
+myapps-dep-b95659446-h2hv4    1/1     Running             0          5m20s
+
+[root@master ~]# kubectl get pod
+NAME                          READY   STATUS    RESTARTS   AGE
+myapps-dep-7f7cf8d6d6-9985l   1/1     Running   0          17s
+myapps-dep-7f7cf8d6d6-p75dg   1/1     Running   0          16s
+myapps-dep-7f7cf8d6d6-p8nhj   1/1     Running   0          13s
+myapps-dep-7f7cf8d6d6-t2km6   1/1     Running   0          8s
+
+[root@master ~]# vim deployment.yml
+[root@master ~]# kubectl apply -f deployment.yml
+deployment.apps/myapps-dep configured
+[root@master ~]# kubectl get pod
+NAME                          READY   STATUS              RESTARTS   AGE
+myapps-dep-7f7cf8d6d6-8wdtl   1/1     Running             0          4s
+myapps-dep-7f7cf8d6d6-9985l   1/1     Running             0          2m29s
+myapps-dep-7f7cf8d6d6-gdxzk   0/1     ContainerCreating   0          4s
+myapps-dep-7f7cf8d6d6-p75dg   1/1     Running             0          2m28s
+myapps-dep-7f7cf8d6d6-p8nhj   1/1     Running             0          2m25s
+myapps-dep-7f7cf8d6d6-sdh2h   0/1     ContainerCreating   0          4s
+myapps-dep-7f7cf8d6d6-t2km6   1/1     Running             0          2m20s
+myapps-dep-7f7cf8d6d6-wrkwm   1/1     Running             0          4s
+[root@master ~]# kubectl get pod
+NAME                          READY   STATUS    RESTARTS   AGE
+myapps-dep-7f7cf8d6d6-8wdtl   1/1     Running   0          10s
+myapps-dep-7f7cf8d6d6-9985l   1/1     Running   0          2m35s
+myapps-dep-7f7cf8d6d6-gdxzk   1/1     Running   0          10s
+myapps-dep-7f7cf8d6d6-p75dg   1/1     Running   0          2m34s
+myapps-dep-7f7cf8d6d6-p8nhj   1/1     Running   0          2m31s
+myapps-dep-7f7cf8d6d6-sdh2h   1/1     Running   0          10s
+myapps-dep-7f7cf8d6d6-t2km6   1/1     Running   0          2m26s
+myapps-dep-7f7cf8d6d6-wrkwm   1/1     Running   0          10s
 
 
