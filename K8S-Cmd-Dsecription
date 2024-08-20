@@ -1,1 +1,5 @@
+kubectl get pod
+  lists pods in the currently configured default namespace.
+kubectl get pods -A
+  list pods across all namespaces in the cluster.
 
