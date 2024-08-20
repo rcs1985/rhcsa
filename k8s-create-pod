@@ -1,1 +1,102 @@
 https://etherpad.opendev.org/p/tcs-devops-aut24
+
+[root@master ~]# kubectl run myweb2 --image=httpd --dry-run=client -o yaml > pod.yml
+[root@master ~]# ls -lrt
+total 33760
+-rw-r--r--. 1 root root 34555260 Jul 26  2023 containerd.io-1.6.10-3.1.el7.x86_64.rpm
+-rw-------. 1 root root     1277 Aug  8 13:06 anaconda-ks.cfg
+-rw-r--r--. 1 root root     1571 Aug  8 13:22 initial-setup-ks.cfg
+drwxr-xr-x. 2 root root        6 Aug  8 13:23 Videos
+drwxr-xr-x. 2 root root        6 Aug  8 13:23 Templates
+drwxr-xr-x. 2 root root        6 Aug  8 13:23 Public
+drwxr-xr-x. 2 root root        6 Aug  8 13:23 Pictures
+drwxr-xr-x. 2 root root        6 Aug  8 13:23 Music
+drwxr-xr-x. 2 root root        6 Aug  8 13:23 Downloads
+drwxr-xr-x. 2 root root        6 Aug  8 13:23 Documents
+drwxr-xr-x. 2 root root        6 Aug  8 13:23 Desktop
+drwx------. 1 root root        0 Aug 20 10:21 thinclient_drives
+-rw-r--r--. 1 root root      235 Aug 20 10:27 pod.yml
+[root@master ~]# cat pod.yml 
+apiVersion: v1
+kind: Pod
+metadata:
+  creationTimestamp: null
+  labels:
+    run: myweb2
+  name: myweb2
+spec:
+  containers:
+  - image: httpd
+    name: myweb2
+    resources: {}
+  dnsPolicy: ClusterFirst
+  restartPolicy: Always
+status: {}
+[root@master ~]# kubectl create -f pod.yml
+pod/myweb2 created
+[root@master ~]# kubectl get node
+NAME     STATUS   ROLES           AGE     VERSION
+master   Ready    control-plane   3d22h   v1.29.8
+node1    Ready    <none>          3d22h   v1.29.8
+node2    Ready    <none>          3d21h   v1.29.8
+[root@master ~]# kubectl get pod
+NAME     READY   STATUS    RESTARTS   AGE
+myweb2   1/1     Running   0          12s
+[root@master ~]# kubectl get pod -o wide
+NAME     READY   STATUS    RESTARTS   AGE   IP            NODE    NOMINATED NODE   READINESS GATES
+myweb2   1/1     Running   0          26s   192.168.0.2   node1   <none>           <none>
+[root@master ~]# kubectl describe pod myweb2
+Name:             myweb2
+Namespace:        default
+Priority:         0
+Service Account:  default
+Node:             node1/10.0.11.168
+Start Time:       Tue, 20 Aug 2024 10:27:31 +0530
+Labels:           run=myweb2
+Annotations:      <none>
+Status:           Running
+IP:               192.168.0.2
+IPs:
+  IP:  192.168.0.2
+Containers:
+  myweb2:
+    Container ID:   containerd://2b6b0c89725593f15df2810620f9f823f546c579f6ccb7f5e61d5d7a8a684417
+    Image:          httpd
+    Image ID:       docker.io/library/httpd@sha256:3f71777bcfac3df3aff5888a2d78c4104501516300b2e7ecb91ce8de2e3debc7
+    Port:           <none>
+    Host Port:      <none>
+    State:          Running
+      Started:      Tue, 20 Aug 2024 10:27:42 +0530
+    Ready:          True
+    Restart Count:  0
+    Environment:    <none>
+    Mounts:
+      /var/run/secrets/kubernetes.io/serviceaccount from kube-api-access-zjpwq (ro)
+Conditions:
+  Type                        Status
+  PodReadyToStartContainers   True 
+  Initialized                 True 
+  Ready                       True 
+  ContainersReady             True 
+  PodScheduled                True 
+Volumes:
+  kube-api-access-zjpwq:
+    Type:                    Projected (a volume that contains injected data from multiple sources)
+    TokenExpirationSeconds:  3607
+    ConfigMapName:           kube-root-ca.crt
+    ConfigMapOptional:       <nil>
+    DownwardAPI:             true
+QoS Class:                   BestEffort
+Node-Selectors:              <none>
+Tolerations:                 node.kubernetes.io/not-ready:NoExecute op=Exists for 300s
+                             node.kubernetes.io/unreachable:NoExecute op=Exists for 300s
+Events:
+  Type    Reason     Age   From               Message
+  ----    ------     ----  ----               -------
+  Normal  Scheduled  50s   default-scheduler  Successfully assigned default/myweb2 to node1
+  Normal  Pulling    50s   kubelet            Pulling image "httpd"
+  Normal  Pulled     40s   kubelet            Successfully pulled image "httpd" in 10.001s (10.001s including waiting)
+  Normal  Created    40s   kubelet            Created container myweb2
+  Normal  Started    40s   kubelet            Started container myweb2
+[root@master ~]# 
+
