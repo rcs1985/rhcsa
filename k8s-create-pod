@@ -99,4 +99,88 @@ Events:
   Normal  Created    40s   kubelet            Created container myweb2
   Normal  Started    40s   kubelet            Started container myweb2
 [root@master ~]# 
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ReplicaSet:
+    
+[root@master ~]# vim replicaset.yml 
+apiVersion: apps/v1
+kind: ReplicaSet
+metadata: 
+  name: myapps-rs
+  labels:
+    app: myapp
+    type: front-end
+spec:
+  template:
+    metadata:
+      name: myapp-pod
+      labels:
+        app: myapp
+        type: front-end
+    spec:
+      containers:
+      - image: nginx
+        name: mypod
+  replicas: 1
+  selector:
+    matchLabels:
+      type: front-end
+----save---
+
+$kubectl create -f replicaset.yml
+replicaset.apps/myapps-rs created
+$kubectl get pods -o wide
+[root@master ~]# kubectl get pods -o wide
+NAME              READY   STATUS    RESTARTS   AGE   IP            NODE    NOMINATED NODE   READINESS GATES
+myapps-rs-cwqpw   1/1     Running   0          21s   192.168.0.2   node2   <none>           <none>
+myweb2            1/1     Running   0          62m   192.168.0.2   node1   <none>           <none>
+
+edit the "replicas: 4" on above yaml file and try apply the same
+replicas: 4
+[root@master ~]# vim replicaset.yml 
+    [root@master ~]# cat replicaset.yml
+apiVersion: apps/v1
+kind: ReplicaSet
+metadata: 
+  name: myapps-rs
+  labels:
+    app: myapp
+    type: front-end
+spec:
+  template:
+    metadata:
+      name: myapp-pod
+      labels:
+        app: myapp
+        type: front-end
+    spec:
+      containers:
+      - image: nginx
+        name: mypod
+  replicas: 1
+  selector:
+    matchLabels:
+      type: front-end
+  replicas: 4
+
+[root@master ~]# kubectl apply -f replicaset.yml
+Warning: resource replicasets/myapps-rs is missing the kubectl.kubernetes.io/last-applied-configuration annotation which is required by kubectl apply. 
+kubectl apply should only be used on resources created declaratively by either kubectl create --save-config or kubectl apply. 
+The missing annotation will be patched automatically.
+replicaset.apps/myapps-rs configured
+
+[root@master ~]# kubectl get pods -o wide
+NAME              READY   STATUS              RESTARTS   AGE     IP            NODE    NOMINATED NODE   READINESS GATES
+myapps-rs-cwqpw   1/1     Running             0          7m26s   192.168.0.2   node2   <none>           <none>
+myapps-rs-kstpw   0/1     ContainerCreating   0          8s      <none>        node1   <none>           <none>
+myapps-rs-pxpq6   1/1     Running             0          8s      192.168.0.3   node2   <none>           <none>
+myapps-rs-z68rr   0/1     ContainerCreating   0          8s      <none>        node1   <none>           <none>
+myweb2            1/1     Running             0          69m     192.168.0.2   node1   <none>           <none>
+[root@master ~]# kubectl get pods -o wide
+NAME              READY   STATUS    RESTARTS   AGE     IP            NODE    NOMINATED NODE   READINESS GATES
+myapps-rs-cwqpw   1/1     Running   0          7m33s   192.168.0.2   node2   <none>           <none>
+myapps-rs-kstpw   1/1     Running   0          15s     192.168.0.4   node1   <none>           <none>
+myapps-rs-pxpq6   1/1     Running   0          15s     192.168.0.3   node2   <none>           <none>
+myapps-rs-z68rr   1/1     Running   0          15s     192.168.0.3   node1   <none>           <none>
+myweb2            1/1     Running   0          69m     192.168.0.2   node1   <none>           <none>
 
