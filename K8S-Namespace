@@ -1,0 +1,135 @@
+NameSpace: (project in openshift)
+    
+    #kubectl create ns mytcs --dry-run=client -o yaml > ns.yml
+      
+
+    #cat ns.yml    ---> just verify the yaml file
+    [root@master ~]# kubectl create ns mytcs --dry-run=client -o yaml > ns.yml
+      [root@master ~]# cat ns.yml 
+      apiVersion: v1
+      kind: Namespace
+      metadata:
+      creationTimestamp: null
+      name: mytcs
+      spec: {}
+      status: {}
+    #kubectl create -f ns.yml
+    [root@master ~]# kubectl create -f ns.yml
+    namespace/mytcs created
+
+    #kubectl get ns  --> will give you all other avlbl namespaces 
+    [root@master ~]# kubectl get ns
+    NAME              STATUS   AGE
+    default           Active   4d21h
+    kube-flannel      Active   4d21h
+    kube-node-lease   Active   4d21h
+    kube-public       Active   4d21h
+    kube-system       Active   4d21h
+    mytcs             Active   13s
+
+    #kubectl get ns mytcs -o yaml
+    [root@master ~]# kubectl get ns mytcs -o yaml
+    apiVersion: v1
+    kind: Namespace
+    metadata:
+      creationTimestamp: "2024-08-21T04:50:26Z"
+        labels:
+        kubernetes.io/metadata.name: mytcs
+        name: mytcs
+        resourceVersion: "296335"
+        uid: 9817d2ca-4224-4531-9c35-dcaa9212bae5
+      spec:
+        finalizers:
+          - kubernetes
+      status:
+        phase: Active
+#kubectl get all
+[root@master ~]# kubectl get pod
+NAME                          READY   STATUS    RESTARTS   AGE
+myapps-dep-7f7cf8d6d6-8wdtl   1/1     Running   0          21h
+myapps-dep-7f7cf8d6d6-9985l   1/1     Running   0          21h
+myapps-dep-7f7cf8d6d6-gdxzk   1/1     Running   0          21h
+myapps-dep-7f7cf8d6d6-p75dg   1/1     Running   0          21h
+myapps-dep-7f7cf8d6d6-p8nhj   1/1     Running   0          21h
+myapps-dep-7f7cf8d6d6-sdh2h   1/1     Running   0          21h
+myapps-dep-7f7cf8d6d6-t2km6   1/1     Running   0          21h
+myapps-dep-7f7cf8d6d6-wrkwm   1/1     Running   0          21h
+
+#kubectl get pod -n default  -> to check the resources in other namespaces
+[root@master ~]# kubectl get pod -n default 
+NAME                          READY   STATUS    RESTARTS   AGE
+myapps-dep-7f7cf8d6d6-8wdtl   1/1     Running   0          21h
+myapps-dep-7f7cf8d6d6-9985l   1/1     Running   0          21h
+myapps-dep-7f7cf8d6d6-gdxzk   1/1     Running   0          21h
+myapps-dep-7f7cf8d6d6-p75dg   1/1     Running   0          21h
+myapps-dep-7f7cf8d6d6-p8nhj   1/1     Running   0          21h
+myapps-dep-7f7cf8d6d6-sdh2h   1/1     Running   0          21h
+myapps-dep-7f7cf8d6d6-t2km6   1/1     Running   0          21h
+myapps-dep-7f7cf8d6d6-wrkwm   1/1     Running   0          21h
+
+#kubectl config set-context $(kubectl config current-context) --namespace=mytcs
+[root@master ~]# kubectl config set-context $(kubectl config current-context) --namespace=mytcs
+Context "kubernetes-admin@kubernetes" modified.
+
+[root@master ~]# kubectl get pod
+No resources found in mytcs namespace.
+
+Go to the other namespace and try create resources:
+#kubectl config set-context $(kubectl config current-context) --namespace=default
+[root@master ~]# kubectl config set-context $(kubectl config current-context) --namespace=default
+Context "kubernetes-admin@kubernetes" modified.
+
+#kubectl create -f replicaset.yml
+[root@master ~]# kubectl create -f replicaset.yml
+replicaset.apps/myapps-rs created
+ 
+#kubectl  get pod 
+[root@master ~]# kubectl get pod
+NAME                          READY   STATUS    RESTARTS   AGE
+myapps-dep-7f7cf8d6d6-8wdtl   1/1     Running   0          21h
+myapps-dep-7f7cf8d6d6-9985l   1/1     Running   0          21h
+myapps-dep-7f7cf8d6d6-gdxzk   1/1     Running   0          21h
+myapps-dep-7f7cf8d6d6-p75dg   1/1     Running   0          21h
+myapps-dep-7f7cf8d6d6-p8nhj   1/1     Running   0          21h
+myapps-dep-7f7cf8d6d6-sdh2h   1/1     Running   0          21h
+myapps-dep-7f7cf8d6d6-t2km6   1/1     Running   0          21h
+myapps-dep-7f7cf8d6d6-wrkwm   1/1     Running   0          21h
+
+#kubectl get pod -n mytcs
+[root@master ~]# kubectl get pod -n mytcs
+No resources found in mytcs namespace.
+
+To check the resources in all other namespaces:
+#kubectl  get pod -A
+[root@master ~]# kubectl get pod -A
+NAMESPACE      NAME                             READY   STATUS    RESTARTS       AGE
+default        myapps-dep-7f7cf8d6d6-8wdtl      1/1     Running   0              21h
+default        myapps-dep-7f7cf8d6d6-9985l      1/1     Running   0              21h
+default        myapps-dep-7f7cf8d6d6-gdxzk      1/1     Running   0              21h
+default        myapps-dep-7f7cf8d6d6-p75dg      1/1     Running   0              21h
+default        myapps-dep-7f7cf8d6d6-p8nhj      1/1     Running   0              21h
+default        myapps-dep-7f7cf8d6d6-sdh2h      1/1     Running   0              21h
+default        myapps-dep-7f7cf8d6d6-t2km6      1/1     Running   0              21h
+default        myapps-dep-7f7cf8d6d6-wrkwm      1/1     Running   0              21h
+kube-flannel   kube-flannel-ds-586r8            1/1     Running   1 (4d3h ago)   4d21h
+kube-flannel   kube-flannel-ds-gkx8p            1/1     Running   8 (4d3h ago)   4d21h
+kube-flannel   kube-flannel-ds-kxkt4            1/1     Running   8 (4d3h ago)   4d21h
+kube-system    coredns-76f75df574-kpkf6         1/1     Running   1 (4d3h ago)   4d22h
+kube-system    coredns-76f75df574-ntblz         1/1     Running   1 (4d3h ago)   4d22h
+kube-system    etcd-master                      1/1     Running   1 (4d3h ago)   4d22h
+kube-system    kube-apiserver-master            1/1     Running   1 (4d3h ago)   4d22h
+kube-system    kube-controller-manager-master   1/1     Running   1 (4d3h ago)   4d22h
+kube-system    kube-proxy-7cs7v                 1/1     Running   1 (4d3h ago)   4d21h
+kube-system    kube-proxy-7wfw8                 1/1     Running   1 (4d3h ago)   4d21h
+kube-system    kube-proxy-c6nnl                 1/1     Running   1 (4d3h ago)   4d22h
+kube-system    kube-scheduler-master            1/1     Running   1 (4d3h ago)   4d22h
+
+
+
+    
+    #kubectl get pod -n default  -> to check the resources in other namespaces 
+    How to change namespace?
+         
+    
+    
+    
