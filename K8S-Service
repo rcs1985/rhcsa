@@ -1,0 +1,142 @@
+$ kubectl create deploy nginxsvc  - -image=nginx - -dry-run=client -o yaml > nginxsvc.yml
+
+[root@master ~]# kubectl create deploy nginxsvcs --image=nginx --dry-run=client -o yaml > nginxsvcs.yml
+[root@master ~]# kubectl get all
+NAME                 TYPE        CLUSTER-IP   EXTERNAL-IP   PORT(S)   AGE
+service/kubernetes   ClusterIP   10.96.0.1    <none>        443/TCP   5d
+$ kubectl create –f nginxsvc.yml 
+[root@master ~]# kubectl create -f nginxsvcs.yml 
+deployment.apps/nginxsvcs created
+
+here we have add 
+  ports:
+  - nodePort: 32000
+    port: 80
+    protocol: TCP
+    targetPort: 80
+  selector:
+    app: nginxsvcs
+  sessionAffinity: None
+  type: NodePort
+
+[root@master ~]# kubectl get all
+NAME                             READY   STATUS    RESTARTS   AGE
+pod/nginxsvcs-56cb6884b8-2ghbz   1/1     Running   0          5s
+
+NAME                 TYPE        CLUSTER-IP   EXTERNAL-IP   PORT(S)   AGE
+service/kubernetes   ClusterIP   10.96.0.1    <none>        443/TCP   5d
+
+NAME                        READY   UP-TO-DATE   AVAILABLE   AGE
+deployment.apps/nginxsvcs   1/1     1            1           5s
+
+NAME                                   DESIRED   CURRENT   READY   AGE
+replicaset.apps/nginxsvcs-56cb6884b8   1         1         1       5s
+
+[root@master ~]# kubectl expose deploy nginxsvcs --port=80  
+service/nginxsvcs exposed
+
+[root@master ~]# kubectl get all
+NAME                             READY   STATUS    RESTARTS   AGE
+pod/nginxsvcs-56cb6884b8-2ghbz   1/1     Running   0          113s
+
+NAME                 TYPE        CLUSTER-IP      EXTERNAL-IP   PORT(S)   AGE
+service/kubernetes   ClusterIP   10.96.0.1       <none>        443/TCP   5d
+service/nginxsvcs    ClusterIP   10.99.230.110   <none>        80/TCP    4s
+
+NAME                        READY   UP-TO-DATE   AVAILABLE   AGE
+deployment.apps/nginxsvcs   1/1     1            1           113s
+
+NAME                                   DESIRED   CURRENT   READY   AGE
+replicaset.apps/nginxsvcs-56cb6884b8   1         1         1       113s
+
+[root@master ~]# kubectl describe svc nginxsvcs 
+Name:              nginxsvcs
+Namespace:         default
+Labels:            app=nginxsvcs
+Annotations:       <none>
+Selector:          app=nginxsvcs
+Type:              ClusterIP
+IP Family Policy:  SingleStack
+IP Families:       IPv4
+IP:                10.99.230.110
+IPs:               10.99.230.110
+Port:              <unset>  80/TCP
+TargetPort:        80/TCP
+Endpoints:         192.168.0.11:80
+Session Affinity:  None
+Events:            <none>
+
+[root@master ~]# kubectl get svc nginxsvcs -o yaml  
+apiVersion: v1
+kind: Service
+metadata:
+  creationTimestamp: "2024-08-21T06:53:14Z"
+  labels:
+    app: nginxsvcs
+  name: nginxsvcs
+  namespace: default
+  resourceVersion: "307502"
+  uid: 24cf6e15-28f9-441f-9b67-3f34994e1941
+spec:
+  clusterIP: 10.99.230.110
+  clusterIPs:
+  - 10.99.230.110
+  internalTrafficPolicy: Cluster
+  ipFamilies:
+  - IPv4
+  ipFamilyPolicy: SingleStack
+  ports:
+  - port: 80
+    protocol: TCP
+    targetPort: 80
+  selector:
+    app: nginxsvcs
+  sessionAffinity: None
+  type: ClusterIP
+status:
+  loadBalancer: {}
+[root@master ~]# kubectl get endpoints
+NAME         ENDPOINTS          AGE
+kubernetes   10.0.11.167:6443   5d
+nginxsvcs    192.168.0.11:80    2m21s
+
+[root@master ~]# kubectl get svc
+NAME         TYPE        CLUSTER-IP      EXTERNAL-IP   PORT(S)   AGE
+kubernetes   ClusterIP   10.96.0.1       <none>        443/TCP   5d
+nginxsvcs    ClusterIP   10.99.230.110   <none>        80/TCP    2m58s
+
+[root@master ~]# kubectl edit svc nginxsvcs
+error: services "nginxsvcs" is invalid
+service/nginxsvcs edited
+[root@master ~]# kubectl edit svc nginxsvcs
+Edit cancelled, no changes made.
+
+[root@master ~]# kubectl get pod -o wide
+NAME                         READY   STATUS    RESTARTS   AGE   IP             NODE    NOMINATED NODE   READINESS GATES
+nginxsvcs-56cb6884b8-2ghbz   1/1     Running   0          35m   192.168.0.11   node2   <none>           <none>
+
+add node2 ip in below command
+[root@master ~]# curl http://10.0.11.169:32000 
+<!DOCTYPE html>
+<html>
+<head>
+<title>Welcome to nginx!</title>
+<style>
+html { color-scheme: light dark; }
+body { width: 35em; margin: 0 auto;
+font-family: Tahoma, Verdana, Arial, sans-serif; }
+</style>
+</head>
+<body>
+<h1>Welcome to nginx!</h1>
+<p>If you see this page, the nginx web server is successfully installed and
+working. Further configuration is required.</p>
+
+<p>For online documentation and support please refer to
+<a href="http://nginx.org/">nginx.org</a>.<br/>
+Commercial support is available at
+<a href="http://nginx.com/">nginx.com</a>.</p>
+
+<p><em>Thank you for using nginx.</em></p>
+</body>
+</html>
