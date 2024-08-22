@@ -1,0 +1,613 @@
+
+
+[root@master ~]# kubectl create deploy resdeploy  --image=nginx --dry-run=client -o yaml > resdeploy.yml
+[root@master ~]# 
+
+[root@master ~]# kubectl create deploy resdeploy  --image=nginx --dry-run=client -o yaml > resdeploy.yml
+[root@master ~]# 
+[root@master ~]# kubectl get pod
+NAME                         READY   STATUS    RESTARTS   AGE
+nginxsvcs-56cb6884b8-plnj6   1/1     Running   0          20m
+[root@master ~]# 
+[root@master ~]# kubectl create -f resdeploy.yml
+deployment.apps/resdeploy created
+[root@master ~]# kubectl get pod
+NAME                         READY   STATUS    RESTARTS   AGE
+nginxsvcs-56cb6884b8-plnj6   1/1     Running   0          20m
+resdeploy-88d974bc8-2b7xw    1/1     Running   0          7s
+[root@master ~]# 
+[root@master ~]# 
+[root@master ~]# 
+[root@master ~]# kubectl edit resdeploy.yml
+error: the server doesn't have a resource type "resdeploy"
+[root@master ~]# kubectl get pod
+NAME                         READY   STATUS    RESTARTS   AGE
+nginxsvcs-56cb6884b8-plnj6   1/1     Running   0          22m
+resdeploy-88d974bc8-2b7xw    1/1     Running   0          76s
+[root@master ~]# vi resdeploy.yml
+[root@master ~]# 
+[root@master ~]# ls -lrt
+total 33780
+-rw-r--r--. 1 root root 34555260 Jul 26  2023 containerd.io-1.6.10-3.1.el7.x86_64.rpm
+-rw-------. 1 root root     1277 Aug  8 13:06 anaconda-ks.cfg
+-rw-r--r--. 1 root root     1571 Aug  8 13:22 initial-setup-ks.cfg
+drwxr-xr-x. 2 root root        6 Aug  8 13:23 Videos
+drwxr-xr-x. 2 root root        6 Aug  8 13:23 Templates
+drwxr-xr-x. 2 root root        6 Aug  8 13:23 Public
+drwxr-xr-x. 2 root root        6 Aug  8 13:23 Pictures
+drwxr-xr-x. 2 root root        6 Aug  8 13:23 Music
+drwxr-xr-x. 2 root root        6 Aug  8 13:23 Downloads
+drwxr-xr-x. 2 root root        6 Aug  8 13:23 Documents
+drwxr-xr-x. 2 root root        6 Aug  8 13:23 Desktop
+-rw-r--r--. 1 root root      235 Aug 20 10:27 pod.yml
+-rw-r--r--. 1 root root      370 Aug 20 11:36 replicaset.yml
+-rw-r--r--. 1 root root      368 Aug 20 13:17 deployment.yml
+-rw-r--r--. 1 root root      101 Aug 21 10:19 ns.yml
+-rw-r--r--. 1 root root      400 Aug 21 12:20 nginxsvcs.yml
+drwx------. 1 root root        0 Aug 22 10:27 thinclient_drives
+-rw-r--r--. 1 root root      400 Aug 22 10:58 resdeploy.yml
+[root@master ~]# vim resdeploy.yml
+[root@master ~]# kubectl get pod
+NAME                         READY   STATUS    RESTARTS   AGE
+nginxsvcs-56cb6884b8-plnj6   1/1     Running   0          26m
+resdeploy-88d974bc8-2b7xw    1/1     Running   0          5m16s
+[root@master ~]# kubectl get pod
+NAME                         READY   STATUS    RESTARTS   AGE
+nginxsvcs-56cb6884b8-plnj6   1/1     Running   0          26m
+resdeploy-88d974bc8-2b7xw    1/1     Running   0          5m18s
+[root@master ~]# kubectl get pod
+NAME                         READY   STATUS    RESTARTS   AGE
+nginxsvcs-56cb6884b8-plnj6   1/1     Running   0          26m
+resdeploy-88d974bc8-2b7xw    1/1     Running   0          5m19s
+[root@master ~]# kubectl get pod
+NAME                         READY   STATUS    RESTARTS   AGE
+nginxsvcs-56cb6884b8-plnj6   1/1     Running   0          26m
+resdeploy-88d974bc8-2b7xw    1/1     Running   0          5m20s
+[root@master ~]# kubectl get pod
+NAME                         READY   STATUS    RESTARTS   AGE
+nginxsvcs-56cb6884b8-plnj6   1/1     Running   0          26m
+resdeploy-88d974bc8-2b7xw    1/1     Running   0          5m21s
+[root@master ~]# kubectl get pod
+NAME                         READY   STATUS    RESTARTS   AGE
+nginxsvcs-56cb6884b8-plnj6   1/1     Running   0          26m
+resdeploy-88d974bc8-2b7xw    1/1     Running   0          5m47s
+[root@master ~]# kubectl get pod
+NAME                         READY   STATUS    RESTARTS   AGE
+nginxsvcs-56cb6884b8-plnj6   1/1     Running   0          26m
+resdeploy-88d974bc8-2b7xw    1/1     Running   0          5m48s
+[root@master ~]# kubectl get pod
+NAME                         READY   STATUS    RESTARTS   AGE
+nginxsvcs-56cb6884b8-plnj6   1/1     Running   0          26m
+resdeploy-88d974bc8-2b7xw    1/1     Running   0          5m49s
+[root@master ~]# kubectl get pod
+NAME                         READY   STATUS    RESTARTS   AGE
+nginxsvcs-56cb6884b8-plnj6   1/1     Running   0          26m
+resdeploy-88d974bc8-2b7xw    1/1     Running   0          5m50s
+[root@master ~]# kubectl get pod
+NAME                         READY   STATUS    RESTARTS   AGE
+nginxsvcs-56cb6884b8-plnj6   1/1     Running   0          27m
+resdeploy-88d974bc8-2b7xw    1/1     Running   0          6m25s
+[root@master ~]# kubectl get pod
+NAME                         READY   STATUS    RESTARTS   AGE
+nginxsvcs-56cb6884b8-plnj6   1/1     Running   0          27m
+resdeploy-88d974bc8-2b7xw    1/1     Running   0          6m26s
+[root@master ~]# 
+[root@master ~]# kubectl get pod
+NAME                         READY   STATUS    RESTARTS   AGE
+nginxsvcs-56cb6884b8-plnj6   1/1     Running   0          27m
+resdeploy-88d974bc8-2b7xw    1/1     Running   0          7m
+[root@master ~]# 
+[root@master ~]# cat resdeploy.yml 
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+    app: resdeploy
+  name: resdeploy
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: resdeploy
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: resdeploy
+    spec:
+      containers:
+      - image: nginx
+        name: nginx
+        resources: {}
+          limits:
+            cpu: 200m
+            memory: 200Gi
+          requests:
+            cpu: 100m
+            memory: 100Gi 
+status: {}
+[root@master ~]# kubectl get pod
+NAME                         READY   STATUS    RESTARTS   AGE
+nginxsvcs-56cb6884b8-plnj6   1/1     Running   0          28m
+resdeploy-88d974bc8-2b7xw    1/1     Running   0          7m50s
+[root@master ~]# 
+[root@master ~]# 
+[root@master ~]# kubectl apply -f resdeploy.yml
+error: error parsing resdeploy.yml: error converting YAML to JSON: yaml: line 23: did not find expected key
+[root@master ~]# vi resdeploy.yml
+[root@master ~]# vi resdeploy.yml
+[root@master ~]# kubectl apply -f resdeploy.yml
+Warning: resource deployments/resdeploy is missing the kubectl.kubernetes.io/last-applied-configuration annotation which is required by kubectl apply. kubectl apply should only be used on resources created declaratively by either kubectl create --save-config or kubectl apply. The missing annotation will be patched automatically.
+deployment.apps/resdeploy configured
+[root@master ~]# kubectl get pod
+NAME                         READY   STATUS    RESTARTS   AGE
+nginxsvcs-56cb6884b8-plnj6   1/1     Running   0          30m
+resdeploy-86bcb759c5-6ldzk   0/1     Pending   0          3s
+resdeploy-88d974bc8-2b7xw    1/1     Running   0          9m42s
+[root@master ~]# 
+[root@master ~]# 
+[root@master ~]# 
+[root@master ~]# kubectl get events | grep -i insuffi
+55s         Warning   FailedScheduling          pod/resdeploy-86bcb759c5-6ldzk    0/3 nodes are available: 1 node(s) had untolerated taint {node-role.kubernetes.io/control-plane: }, 2 Insufficient memory. preemption: 0/3 nodes are available: 1 Preemption is not helpful for scheduling, 2 No preemption victims found for incoming pod.
+[root@master ~]# vi resdeploy.yml
+[root@master ~]# kubectl apply -f resdeploy.yml
+deployment.apps/resdeploy configured
+[root@master ~]# kubectl get pod
+NAME                         READY   STATUS              RESTARTS   AGE
+nginxsvcs-56cb6884b8-plnj6   1/1     Running             0          32m
+resdeploy-79b575988b-brdvb   0/1     ContainerCreating   0          3s
+resdeploy-88d974bc8-2b7xw    1/1     Running             0          11m
+[root@master ~]# kubectl get pod
+NAME                         READY   STATUS    RESTARTS   AGE
+nginxsvcs-56cb6884b8-plnj6   1/1     Running   0          32m
+resdeploy-79b575988b-brdvb   1/1     Running   0          5s
+[root@master ~]# kubectl get pod -o wide
+NAME                         READY   STATUS    RESTARTS   AGE   IP            NODE    NOMINATED NODE   READINESS GATES
+nginxsvcs-56cb6884b8-plnj6   1/1     Running   0          32m   192.168.0.2   node1   <none>           <none>
+resdeploy-79b575988b-brdvb   1/1     Running   0          24s   192.168.0.3   node1   <none>           <none>
+[root@master ~]# kubectl describe node node1
+Name:               node1
+Roles:              <none>
+Labels:             beta.kubernetes.io/arch=amd64
+                    beta.kubernetes.io/os=linux
+                    kubernetes.io/arch=amd64
+                    kubernetes.io/hostname=node1
+                    kubernetes.io/os=linux
+Annotations:        flannel.alpha.coreos.com/backend-data: {"VNI":1,"VtepMAC":"72:11:aa:f2:7a:cc"}
+                    flannel.alpha.coreos.com/backend-type: vxlan
+                    flannel.alpha.coreos.com/kube-subnet-manager: true
+                    flannel.alpha.coreos.com/public-ip: 10.0.11.168
+                    kubeadm.alpha.kubernetes.io/cri-socket: unix:///var/run/containerd/containerd.sock
+                    node.alpha.kubernetes.io/ttl: 0
+                    volumes.kubernetes.io/controller-managed-attach-detach: true
+CreationTimestamp:  Fri, 16 Aug 2024 12:27:32 +0530
+Taints:             <none>
+Unschedulable:      false
+Lease:
+  HolderIdentity:  node1
+  AcquireTime:     <unset>
+  RenewTime:       Thu, 22 Aug 2024 11:11:55 +0530
+Conditions:
+  Type                 Status  LastHeartbeatTime                 LastTransitionTime                Reason                       Message
+  ----                 ------  -----------------                 ------------------                ------                       -------
+  NetworkUnavailable   False   Thu, 22 Aug 2024 10:39:43 +0530   Thu, 22 Aug 2024 10:39:43 +0530   FlannelIsUp                  Flannel is running on this node
+  MemoryPressure       False   Thu, 22 Aug 2024 11:10:46 +0530   Thu, 22 Aug 2024 10:39:38 +0530   KubeletHasSufficientMemory   kubelet has sufficient memory available
+  DiskPressure         False   Thu, 22 Aug 2024 11:10:46 +0530   Thu, 22 Aug 2024 10:39:38 +0530   KubeletHasNoDiskPressure     kubelet has no disk pressure
+  PIDPressure          False   Thu, 22 Aug 2024 11:10:46 +0530   Thu, 22 Aug 2024 10:39:38 +0530   KubeletHasSufficientPID      kubelet has sufficient PID available
+  Ready                True    Thu, 22 Aug 2024 11:10:46 +0530   Thu, 22 Aug 2024 10:40:05 +0530   KubeletReady                 kubelet is posting ready status
+Addresses:
+  InternalIP:  10.0.11.168
+  Hostname:    node1
+Capacity:
+  cpu:                2
+  ephemeral-storage:  64157076Ki
+  hugepages-1Gi:      0
+  hugepages-2Mi:      0
+  memory:             3753680Ki
+  pods:               110
+Allocatable:
+  cpu:                2
+  ephemeral-storage:  59127161144
+  hugepages-1Gi:      0
+  hugepages-2Mi:      0
+  memory:             3651280Ki
+  pods:               110
+System Info:
+  Machine ID:                 16d81368b6a5440a9a65c44049407f43
+  System UUID:                22570842-6e63-b237-6a3c-46bc28d11209
+  Boot ID:                    95b7c136-021c-4e67-9584-594cfd6ff655
+  Kernel Version:             4.18.0-553.el8_10.x86_64
+  OS Image:                   Rocky Linux 8.10 (Green Obsidian)
+  Operating System:           linux
+  Architecture:               amd64
+  Container Runtime Version:  containerd://1.6.10
+  Kubelet Version:            v1.29.8
+  Kube-Proxy Version:         v1.29.8
+PodCIDR:                      192.168.0.0/24
+PodCIDRs:                     192.168.0.0/24
+Non-terminated Pods:          (4 in total)
+  Namespace                   Name                          CPU Requests  CPU Limits  Memory Requests  Memory Limits  Age
+  ---------                   ----                          ------------  ----------  ---------------  -------------  ---
+  default                     nginxsvcs-56cb6884b8-plnj6    0 (0%)        0 (0%)      0 (0%)           0 (0%)         33m
+  default                     resdeploy-79b575988b-brdvb    100m (5%)     200m (10%)  100Mi (2%)       200Mi (5%)     43s
+  kube-flannel                kube-flannel-ds-gkx8p         100m (5%)     0 (0%)      50Mi (1%)        0 (0%)         5d22h
+  kube-system                 kube-proxy-7cs7v              0 (0%)        0 (0%)      0 (0%)           0 (0%)         5d22h
+Allocated resources:
+  (Total limits may be over 100 percent, i.e., overcommitted.)
+  Resource           Requests    Limits
+  --------           --------    ------
+  cpu                200m (10%)  200m (10%)
+  memory             150Mi (4%)  200Mi (5%)
+  ephemeral-storage  0 (0%)      0 (0%)
+  hugepages-1Gi      0 (0%)      0 (0%)
+  hugepages-2Mi      0 (0%)      0 (0%)
+Events:
+  Type     Reason                   Age                From             Message
+  ----     ------                   ----               ----             -------
+  Normal   Starting                 32m                kube-proxy       
+  Normal   RegisteredNode           38m                node-controller  Node node1 event: Registered Node node1 in Controller
+  Normal   NodeNotReady             38m                node-controller  Node node1 status is now: NodeNotReady
+  Normal   NodeReady                32m                kubelet          Node node1 status is now: NodeReady
+  Normal   Starting                 32m                kubelet          Starting kubelet.
+  Normal   NodeHasSufficientMemory  32m (x2 over 32m)  kubelet          Node node1 status is now: NodeHasSufficientMemory
+  Normal   NodeHasNoDiskPressure    32m (x2 over 32m)  kubelet          Node node1 status is now: NodeHasNoDiskPressure
+  Normal   NodeHasSufficientPID     32m (x2 over 32m)  kubelet          Node node1 status is now: NodeHasSufficientPID
+  Warning  InvalidDiskCapacity      32m                kubelet          invalid capacity 0 on image filesystem
+  Normal   NodeAllocatableEnforced  32m                kubelet          Updated Node Allocatable limit across pods
+  Warning  Rebooted                 32m                kubelet          Node node1 has been rebooted, boot id: 95b7c136-021c-4e67-9584-594cfd6ff655
+  Normal   Starting                 31m                kubelet          Starting kubelet.
+  Warning  InvalidDiskCapacity      31m                kubelet          invalid capacity 0 on image filesystem
+  Normal   NodeHasSufficientMemory  31m                kubelet          Node node1 status is now: NodeHasSufficientMemory
+  Normal   NodeHasNoDiskPressure    31m                kubelet          Node node1 status is now: NodeHasNoDiskPressure
+  Normal   NodeHasSufficientPID     31m                kubelet          Node node1 status is now: NodeHasSufficientPID
+  Normal   NodeNotReady             31m                kubelet          Node node1 status is now: NodeNotReady
+  Normal   NodeReady                31m                kubelet          Node node1 status is now: NodeReady
+  Normal   NodeAllocatableEnforced  31m                kubelet          Updated Node Allocatable limit across pods
+[root@master ~]# 
+[root@master ~]# 
+[root@master ~]# kubectl get node
+NAME     STATUS   ROLES           AGE     VERSION
+master   Ready    control-plane   5d23h   v1.29.8
+node1    Ready    <none>          5d23h   v1.29.8
+node2    Ready    <none>          5d23h   v1.29.8
+[root@master ~]# kubectl get pod
+NAME                         READY   STATUS    RESTARTS   AGE
+nginxsvcs-56cb6884b8-plnj6   1/1     Running   0          55m
+resdeploy-79b575988b-brdvb   1/1     Running   0          23m
+[root@master ~]# kubectl get pod rs
+Error from server (NotFound): pods "rs" not found
+[root@master ~]# kubectl get rs
+NAME                   DESIRED   CURRENT   READY   AGE
+nginxsvcs-56cb6884b8   1         1         1       23h
+resdeploy-79b575988b   1         1         1       23m
+resdeploy-86bcb759c5   0         0         0       25m
+resdeploy-88d974bc8    0         0         0       34m
+[root@master ~]# kubectl delete nginxsvcs-56cb6884b8
+error: the server doesn't have a resource type "nginxsvcs-56cb6884b8"
+[root@master ~]# kubectl delete nginxsvcs
+error: the server doesn't have a resource type "nginxsvcs"
+[root@master ~]# kubectl delete svc nginxsvcs
+service "nginxsvcs" deleted
+[root@master ~]# kubectl get rs
+NAME                   DESIRED   CURRENT   READY   AGE
+nginxsvcs-56cb6884b8   1         1         1       23h
+resdeploy-79b575988b   1         1         1       23m
+resdeploy-86bcb759c5   0         0         0       25m
+resdeploy-88d974bc8    0         0         0       35m
+[root@master ~]# kubectl get rs nginxsvcs-56cb6884b8
+NAME                   DESIRED   CURRENT   READY   AGE
+nginxsvcs-56cb6884b8   1         1         1       23h
+[root@master ~]# kubectl delete rs nginxsvcs-56cb6884b8
+replicaset.apps "nginxsvcs-56cb6884b8" deleted
+[root@master ~]# kubectl get rs
+NAME                   DESIRED   CURRENT   READY   AGE
+nginxsvcs-56cb6884b8   1         1         0       3s
+resdeploy-79b575988b   1         1         1       24m
+resdeploy-86bcb759c5   0         0         0       26m
+resdeploy-88d974bc8    0         0         0       35m
+[root@master ~]# kubectl get all
+NAME                             READY   STATUS    RESTARTS   AGE
+pod/nginxsvcs-56cb6884b8-c4dgs   1/1     Running   0          14s
+pod/resdeploy-79b575988b-brdvb   1/1     Running   0          24m
+
+NAME                 TYPE        CLUSTER-IP   EXTERNAL-IP   PORT(S)   AGE
+service/kubernetes   ClusterIP   10.96.0.1    <none>        443/TCP   5d23h
+
+NAME                        READY   UP-TO-DATE   AVAILABLE   AGE
+deployment.apps/nginxsvcs   1/1     1            1           23h
+deployment.apps/resdeploy   1/1     1            1           36m
+
+NAME                                   DESIRED   CURRENT   READY   AGE
+replicaset.apps/nginxsvcs-56cb6884b8   1         1         1       14s
+replicaset.apps/resdeploy-79b575988b   1         1         1       24m
+replicaset.apps/resdeploy-86bcb759c5   0         0         0       26m
+replicaset.apps/resdeploy-88d974bc8    0         0         0       36m
+[root@master ~]# kubectl delete deploy deployment.apps/nginxsvcs
+error: there is no need to specify a resource type as a separate argument when passing arguments in resource/name form (e.g. 'kubectl get resource/<resource_name>' instead of 'kubectl get resource resource/<resource_name>'
+[root@master ~]# kubectl delete deployment deployment.apps/nginxsvcs
+error: there is no need to specify a resource type as a separate argument when passing arguments in resource/name form (e.g. 'kubectl get resource/<resource_name>' instead of 'kubectl get resource resource/<resource_name>'
+[root@master ~]# kubectl delete delete pod pod/nginxsvcs-56cb6884b8-c4dgs
+error: there is no need to specify a resource type as a separate argument when passing arguments in resource/name form (e.g. 'kubectl get resource/<resource_name>' instead of 'kubectl get resource resource/<resource_name>'
+[root@master ~]# 
+[root@master ~]# kubectl get pod
+NAME                         READY   STATUS    RESTARTS   AGE
+nginxsvcs-56cb6884b8-c4dgs   1/1     Running   0          94s
+resdeploy-79b575988b-brdvb   1/1     Running   0          25m
+[root@master ~]# kubectl get all
+NAME                             READY   STATUS    RESTARTS   AGE
+pod/nginxsvcs-56cb6884b8-c4dgs   1/1     Running   0          2m33s
+pod/resdeploy-79b575988b-brdvb   1/1     Running   0          26m
+
+NAME                 TYPE        CLUSTER-IP   EXTERNAL-IP   PORT(S)   AGE
+service/kubernetes   ClusterIP   10.96.0.1    <none>        443/TCP   5d23h
+
+NAME                        READY   UP-TO-DATE   AVAILABLE   AGE
+deployment.apps/nginxsvcs   1/1     1            1           23h
+deployment.apps/resdeploy   1/1     1            1           38m
+
+NAME                                   DESIRED   CURRENT   READY   AGE
+replicaset.apps/nginxsvcs-56cb6884b8   1         1         1       2m33s
+replicaset.apps/resdeploy-79b575988b   1         1         1       26m
+replicaset.apps/resdeploy-86bcb759c5   0         0         0       28m
+replicaset.apps/resdeploy-88d974bc8    0         0         0       38m
+[root@master ~]# systemctl del -f pod/nginxsvcs-56cb6884b8-c4dgs
+Unknown operation del.
+[root@master ~]# systemctl delete -f pod/nginxsvcs-56cb6884b8-c4dgs
+Unknown operation delete.
+[root@master ~]# sysctl delete -f pod/nginxsvcs-56cb6884b8-c4dgs
+sysctl: cannot open "delete": No such file or directory
+sysctl: cannot open "pod/nginxsvcs-56cb6884b8-c4dgs": No such file or directory
+[root@master ~]# systemctl delete -f pod/nginxsvcs-56cb6884b8-c4dgs
+Unknown operation delete.
+[root@master ~]# 
+[root@master ~]# kubectl delete pod pod/nginxsvcs-56cb6884b8-c4dgs
+error: there is no need to specify a resource type as a separate argument when passing arguments in resource/name form (e.g. 'kubectl get resource/<resource_name>' instead of 'kubectl get resource resource/<resource_name>'
+[root@master ~]# kubectl get rosource
+error: the server doesn't have a resource type "rosource"
+[root@master ~]# kubectl get rosource pod
+error: the server doesn't have a resource type "rosource"
+[root@master ~]# 
+[root@master ~]# kubectl get pod
+NAME                         READY   STATUS    RESTARTS   AGE
+nginxsvcs-56cb6884b8-c4dgs   1/1     Running   0          8m5s
+resdeploy-79b575988b-brdvb   1/1     Running   0          32m
+[root@master ~]# kubectl get rs
+NAME                   DESIRED   CURRENT   READY   AGE
+nginxsvcs-56cb6884b8   1         1         1       8m11s
+resdeploy-79b575988b   1         1         1       32m
+resdeploy-86bcb759c5   0         0         0       34m
+resdeploy-88d974bc8    0         0         0       43m
+[root@master ~]# kubectl delete rs nginxsvcs-56cb6884b8
+replicaset.apps "nginxsvcs-56cb6884b8" deleted
+[root@master ~]# kubectl get rs
+NAME                   DESIRED   CURRENT   READY   AGE
+nginxsvcs-56cb6884b8   1         1         0       2s
+resdeploy-79b575988b   1         1         1       32m
+resdeploy-86bcb759c5   0         0         0       34m
+resdeploy-88d974bc8    0         0         0       44m
+[root@master ~]# 
+[root@master ~]# 
+[root@master ~]# ls -lrt
+total 33780
+-rw-r--r--. 1 root root 34555260 Jul 26  2023 containerd.io-1.6.10-3.1.el7.x86_64.rpm
+-rw-------. 1 root root     1277 Aug  8 13:06 anaconda-ks.cfg
+-rw-r--r--. 1 root root     1571 Aug  8 13:22 initial-setup-ks.cfg
+drwxr-xr-x. 2 root root        6 Aug  8 13:23 Videos
+drwxr-xr-x. 2 root root        6 Aug  8 13:23 Templates
+drwxr-xr-x. 2 root root        6 Aug  8 13:23 Public
+drwxr-xr-x. 2 root root        6 Aug  8 13:23 Pictures
+drwxr-xr-x. 2 root root        6 Aug  8 13:23 Music
+drwxr-xr-x. 2 root root        6 Aug  8 13:23 Downloads
+drwxr-xr-x. 2 root root        6 Aug  8 13:23 Documents
+drwxr-xr-x. 2 root root        6 Aug  8 13:23 Desktop
+-rw-r--r--. 1 root root      235 Aug 20 10:27 pod.yml
+-rw-r--r--. 1 root root      370 Aug 20 11:36 replicaset.yml
+-rw-r--r--. 1 root root      368 Aug 20 13:17 deployment.yml
+-rw-r--r--. 1 root root      101 Aug 21 10:19 ns.yml
+-rw-r--r--. 1 root root      400 Aug 21 12:20 nginxsvcs.yml
+drwx------. 1 root root        0 Aug 22 10:27 thinclient_drives
+-rw-r--r--. 1 root root      533 Aug 22 11:11 resdeploy.yml
+[root@master ~]# 
+[root@master ~]# 
+[root@master ~]# vi cat daemonsetUP.yml^C
+[root@master ~]# vi daemonsetUP.yml^C
+[root@master ~]# 
+[root@master ~]# vi daemonsetUP.yml
+[root@master ~]# 
+[root@master ~]# 
+[root@master ~]# kubectl create -f daemonsetUP.yml
+daemonset.apps/mydset created
+[root@master ~]# kubectl get pod
+NAME                         READY   STATUS    RESTARTS   AGE
+mydset-6kgc8                 1/1     Running   0          5s
+mydset-k4bnk                 1/1     Running   0          5s
+nginxsvcs-56cb6884b8-ftppz   1/1     Running   0          63m
+resdeploy-79b575988b-brdvb   1/1     Running   0          96m
+[root@master ~]# kubectl delete pod resdeploy-79b575988b-brdvb
+pod "resdeploy-79b575988b-brdvb" deleted
+[root@master ~]# kubectl delete pod nginxsvcs-56cb6884b8-ftppz
+pod "nginxsvcs-56cb6884b8-ftppz" deleted
+[root@master ~]# kubectl get pod
+NAME                         READY   STATUS              RESTARTS   AGE
+mydset-6kgc8                 1/1     Running             0          37s
+mydset-k4bnk                 1/1     Running             0          37s
+nginxsvcs-56cb6884b8-d5scl   0/1     ContainerCreating   0          3s
+resdeploy-79b575988b-wbvv7   1/1     Running             0          13s
+[root@master ~]# kubectl get ds
+NAME     DESIRED   CURRENT   READY   UP-TO-DATE   AVAILABLE   NODE SELECTOR   AGE
+mydset   2         2         2       2            2           <none>          74s
+[root@master ~]# 
+[root@master ~]# kubectl get pod -o wide
+NAME                         READY   STATUS    RESTARTS   AGE   IP            NODE    NOMINATED NODE   READINESS GATES
+mydset-6kgc8                 1/1     Running   0          88s   192.168.0.5   node1   <none>           <none>
+mydset-k4bnk                 1/1     Running   0          88s   192.168.0.4   node2   <none>           <none>
+nginxsvcs-56cb6884b8-d5scl   1/1     Running   0          54s   192.168.0.6   node2   <none>           <none>
+resdeploy-79b575988b-wbvv7   1/1     Running   0          64s   192.168.0.5   node2   <none>           <none>
+[root@master ~]# 
+[root@master ~]# 
+[root@master ~]# 
+[root@master ~]# kubectl get all
+NAME                             READY   STATUS    RESTARTS   AGE
+pod/mydset-6kgc8                 1/1     Running   0          2m13s
+pod/mydset-k4bnk                 1/1     Running   0          2m13s
+pod/nginxsvcs-56cb6884b8-d5scl   1/1     Running   0          99s
+pod/resdeploy-79b575988b-wbvv7   1/1     Running   0          109s
+
+NAME                 TYPE        CLUSTER-IP   EXTERNAL-IP   PORT(S)   AGE
+service/kubernetes   ClusterIP   10.96.0.1    <none>        443/TCP   6d
+
+NAME                    DESIRED   CURRENT   READY   UP-TO-DATE   AVAILABLE   NODE SELECTOR   AGE
+daemonset.apps/mydset   2         2         2       2            2           <none>          2m13s
+
+NAME                        READY   UP-TO-DATE   AVAILABLE   AGE
+deployment.apps/nginxsvcs   1/1     1            1           24h
+deployment.apps/resdeploy   1/1     1            1           109m
+
+NAME                                   DESIRED   CURRENT   READY   AGE
+replicaset.apps/nginxsvcs-56cb6884b8   1         1         1       65m
+replicaset.apps/resdeploy-79b575988b   1         1         1       98m
+replicaset.apps/resdeploy-86bcb759c5   0         0         0       100m
+replicaset.apps/resdeploy-88d974bc8    0         0         0       109m
+[root@master ~]# 
+[root@master ~]# 
+[root@master ~]# kubectl delete nginxsvcs
+error: the server doesn't have a resource type "nginxsvcs"
+[root@master ~]# kubectl delete deployment.apps/nginxsvcs nginxsvcs
+error: there is no need to specify a resource type as a separate argument when passing arguments in resource/name form (e.g. 'kubectl get resource/<resource_name>' instead of 'kubectl get resource resource/<resource_name>'
+[root@master ~]# kubectl delete svc nginxsvcs
+Error from server (NotFound): services "nginxsvcs" not found
+[root@master ~]# kubectl delete rs replicaset.apps/nginxsvcs-56cb6884b8
+error: there is no need to specify a resource type as a separate argument when passing arguments in resource/name form (e.g. 'kubectl get resource/<resource_name>' instead of 'kubectl get resource resource/<resource_name>'
+[root@master ~]# kubectl delete rs nginxsvcs-56cb6884b8
+replicaset.apps "nginxsvcs-56cb6884b8" deleted
+[root@master ~]# kubectl get all
+NAME                             READY   STATUS    RESTARTS   AGE
+pod/mydset-6kgc8                 1/1     Running   0          3m37s
+pod/mydset-k4bnk                 1/1     Running   0          3m37s
+pod/nginxsvcs-56cb6884b8-dff6k   1/1     Running   0          6s
+pod/resdeploy-79b575988b-wbvv7   1/1     Running   0          3m13s
+
+NAME                 TYPE        CLUSTER-IP   EXTERNAL-IP   PORT(S)   AGE
+service/kubernetes   ClusterIP   10.96.0.1    <none>        443/TCP   6d
+
+NAME                    DESIRED   CURRENT   READY   UP-TO-DATE   AVAILABLE   NODE SELECTOR   AGE
+daemonset.apps/mydset   2         2         2       2            2           <none>          3m37s
+
+NAME                        READY   UP-TO-DATE   AVAILABLE   AGE
+deployment.apps/nginxsvcs   1/1     1            1           24h
+deployment.apps/resdeploy   1/1     1            1           111m
+
+NAME                                   DESIRED   CURRENT   READY   AGE
+replicaset.apps/nginxsvcs-56cb6884b8   1         1         1       6s
+replicaset.apps/resdeploy-79b575988b   1         1         1       99m
+replicaset.apps/resdeploy-86bcb759c5   0         0         0       101m
+replicaset.apps/resdeploy-88d974bc8    0         0         0       111m
+[root@master ~]# 
+[root@master ~]# 
+[root@master ~]# kubectl get deployments 
+NAME        READY   UP-TO-DATE   AVAILABLE   AGE
+nginxsvcs   1/1     1            1           24h
+resdeploy   1/1     1            1           113m
+[root@master ~]# kubectl delete deployments nginxsvcs
+deployment.apps "nginxsvcs" deleted
+[root@master ~]# kubectl get deployments 
+NAME        READY   UP-TO-DATE   AVAILABLE   AGE
+resdeploy   1/1     1            1           113m
+[root@master ~]# kubectl delete deployments resdeploy
+deployment.apps "resdeploy" deleted
+[root@master ~]# kubectl get pod
+NAME           READY   STATUS    RESTARTS   AGE
+mydset-6kgc8   1/1     Running   0          6m35s
+mydset-k4bnk   1/1     Running   0          6m35s
+[root@master ~]# kubectl get pod -o
+error: flag needs an argument: 'o' in -o
+See 'kubectl get --help' for usage.
+[root@master ~]# kubectl get pod -A
+NAMESPACE      NAME                             READY   STATUS    RESTARTS        AGE
+default        mydset-6kgc8                     1/1     Running   0               9m30s
+default        mydset-k4bnk                     1/1     Running   0               9m30s
+kube-flannel   kube-flannel-ds-586r8            1/1     Running   2 (6h33m ago)   6d
+kube-flannel   kube-flannel-ds-gkx8p            1/1     Running   9 (6h32m ago)   6d
+kube-flannel   kube-flannel-ds-kxkt4            1/1     Running   9 (6h32m ago)   6d
+kube-system    coredns-76f75df574-kpkf6         1/1     Running   2 (6h33m ago)   6d
+kube-system    coredns-76f75df574-ntblz         1/1     Running   2 (6h33m ago)   6d
+kube-system    etcd-master                      1/1     Running   2 (6h33m ago)   6d
+kube-system    kube-apiserver-master            1/1     Running   2 (6h33m ago)   6d
+kube-system    kube-controller-manager-master   1/1     Running   2 (6h33m ago)   6d
+kube-system    kube-proxy-7cs7v                 1/1     Running   2 (6h32m ago)   6d
+kube-system    kube-proxy-7wfw8                 1/1     Running   2 (6h32m ago)   6d
+kube-system    kube-proxy-c6nnl                 1/1     Running   2 (6h33m ago)   6d
+kube-system    kube-scheduler-master            1/1     Running   2 (6h33m ago)   6d
+[root@master ~]# kubectl get pod -A -od
+error: unable to match a printer suitable for the output format "d", allowed formats are: custom-columns,custom-columns-file,go-template,go-template-file,json,jsonpath,jsonpath-as-json,jsonpath-file,name,template,templatefile,wide,yaml
+[root@master ~]# kubectl get pod -A -o
+error: flag needs an argument: 'o' in -o
+See 'kubectl get --help' for usage.
+[root@master ~]# kubectl get pod  -o
+error: flag needs an argument: 'o' in -o
+See 'kubectl get --help' for usage.
+[root@master ~]# kubectl get pod -o
+error: flag needs an argument: 'o' in -o
+See 'kubectl get --help' for usage.
+[root@master ~]# kubectl get pod -wide
+error: unknown shorthand flag: 'i' in -ide
+See 'kubectl get --help' for usage.
+[root@master ~]# kubectl get pods -o
+error: flag needs an argument: 'o' in -o
+See 'kubectl get --help' for usage.
+[root@master ~]# kubectl get pods -A
+NAMESPACE      NAME                             READY   STATUS    RESTARTS        AGE
+default        mydset-6kgc8                     1/1     Running   0               9m53s
+default        mydset-k4bnk                     1/1     Running   0               9m53s
+kube-flannel   kube-flannel-ds-586r8            1/1     Running   2 (6h33m ago)   6d
+kube-flannel   kube-flannel-ds-gkx8p            1/1     Running   9 (6h33m ago)   6d
+kube-flannel   kube-flannel-ds-kxkt4            1/1     Running   9 (6h32m ago)   6d
+kube-system    coredns-76f75df574-kpkf6         1/1     Running   2 (6h33m ago)   6d
+kube-system    coredns-76f75df574-ntblz         1/1     Running   2 (6h33m ago)   6d
+kube-system    etcd-master                      1/1     Running   2 (6h33m ago)   6d
+kube-system    kube-apiserver-master            1/1     Running   2 (6h33m ago)   6d
+kube-system    kube-controller-manager-master   1/1     Running   2 (6h33m ago)   6d
+kube-system    kube-proxy-7cs7v                 1/1     Running   2 (6h33m ago)   6d
+kube-system    kube-proxy-7wfw8                 1/1     Running   2 (6h32m ago)   6d
+kube-system    kube-proxy-c6nnl                 1/1     Running   2 (6h33m ago)   6d
+kube-system    kube-scheduler-master            1/1     Running   2 (6h33m ago)   6d
+[root@master ~]# kubectl get pods -A -w
+NAMESPACE      NAME                             READY   STATUS    RESTARTS        AGE
+default        mydset-6kgc8                     1/1     Running   0               9m57s
+default        mydset-k4bnk                     1/1     Running   0               9m57s
+kube-flannel   kube-flannel-ds-586r8            1/1     Running   2 (6h33m ago)   6d
+kube-flannel   kube-flannel-ds-gkx8p            1/1     Running   9 (6h33m ago)   6d
+kube-flannel   kube-flannel-ds-kxkt4            1/1     Running   9 (6h32m ago)   6d
+kube-system    coredns-76f75df574-kpkf6         1/1     Running   2 (6h33m ago)   6d
+kube-system    coredns-76f75df574-ntblz         1/1     Running   2 (6h33m ago)   6d
+kube-system    etcd-master                      1/1     Running   2 (6h33m ago)   6d
+kube-system    kube-apiserver-master            1/1     Running   2 (6h33m ago)   6d
+kube-system    kube-controller-manager-master   1/1     Running   2 (6h33m ago)   6d
+kube-system    kube-proxy-7cs7v                 1/1     Running   2 (6h33m ago)   6d
+kube-system    kube-proxy-7wfw8                 1/1     Running   2 (6h32m ago)   6d
+kube-system    kube-proxy-c6nnl                 1/1     Running   2 (6h33m ago)   6d
+kube-system    kube-scheduler-master            1/1     Running   2 (6h33m ago)   6d
+^[[A
+^C[root@master ~]# kubectl get pods -A -o
+error: flag needs an argument: 'o' in -o
+See 'kubectl get --help' for usage.
+[root@master ~]# kubectl get pods -o
+error: flag needs an argument: 'o' in -o
+See 'kubectl get --help' for usage.
+[root@master ~]# 
+[root@master ~]# kubectl get pods -o wide
+NAME           READY   STATUS    RESTARTS   AGE   IP            NODE    NOMINATED NODE   READINESS GATES
+mydset-6kgc8   1/1     Running   0          11m   192.168.0.5   node1   <none>           <none>
+mydset-k4bnk   1/1     Running   0          11m   192.168.0.4   node2   <none>           <none>
+[root@master ~]# kubectl get pods -o wide
+NAME           READY   STATUS    RESTARTS   AGE   IP            NODE    NOMINATED NODE   READINESS GATES
+mydset-6kgc8   1/1     Running   0          40m   192.168.0.5   node1   <none>           <none>
+mydset-k4bnk   1/1     Running   0          40m   192.168.0.4   node2   <none>           <none>
+[root@master ~]# kubectl get pods -o wide
+NAME           READY   STATUS    RESTARTS   AGE   IP            NODE    NOMINATED NODE   READINESS GATES
+mydset-6kgc8   1/1     Running   0          52m   192.168.0.5   node1   <none>           <none>
+mydset-k4bnk   1/1     Running   0          52m   192.168.0.4   node2   <none>           <none>
+[root@master ~]# 
+
