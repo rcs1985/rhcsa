@@ -1,3 +1,5 @@
+https://etherpad.opendev.org/p/tcs-devops-aut24
+
 Pre-requisite:
 #yum remove -y podman-docker  
 
