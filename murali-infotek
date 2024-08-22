@@ -1,4 +1,4 @@
-kubPre-requisite:
+kubekubPre-requisite:
     
 #yum remove -y podman-docker  
 
@@ -219,6 +219,7 @@ kube-system    coredns-565d847f94-hfk2t                       1/1     Running   
 
 
 
+
 Now joining worker2 node:
  
 
@@ -247,6 +248,9 @@ This needs to be patched to fix flannel error:
 [root@master ~]# kubectl patch node node2 -p '{"spec":{"podCIDR":"192.168.0.0/24"}}'
 node/node2 patched
 [root@master ~]#
+
+Any issues on joining node - use below command to recreate:
+#kubeadm token create --print-join-command
 
 ----------------------------------------------------
 if the server rebooted, swap settings will get revert (if not disabled permanently). nodes wont get start automatically if swap enabled
@@ -290,11 +294,17 @@ Address:
 3. Parent/Child Relationship:
     
     #useradd user300
-    user:
-    name: rjp
-    state: present
--- its wrong---
- 
+
+        user:
+
+        name: rjp
+
+        state: present
+
+    -- its wrong---
+
+     
+
                user:
                     name: rjpuser
                     state: present
@@ -329,7 +339,7 @@ status: {}
 ReplicaSet:
     
 [root@master ~]# vm replicaset.yml 
-apiVersion: apps/v1i
+apiVersion: apps/v1
 kind: ReplicaSet
 metadata: 
   name: myapps-rs
@@ -424,4 +434,491 @@ spec:
 ---Able to see the deployment happenning based on the stratergy -----
 Do similar changes/increase replica count and dirt your hands.
 -------------------
+21Aug24:
+NameSpace: (project in openshift)
+    
+    #kubectl create ns mytcs --dry-run=client -o yaml > ns.yml
+    #cat ns.yml    ---> just verify the yaml file
+    #kubectl create -f ns.yml
+    #kubectl get ns  --> will give you all other avlbl namespaces 
+    #kubectl get ns mytcs -o yaml
+    #kubectl get all
+    #kubectl get pod -n default  -> to check the resources in other namespaces 
+    How to change namespace?
+    #kubectl config set-context $(kubectl config current-context) --namespace=mytcs     
+    
+    Go to the other namespace and try create resources:
+    #kubectl config set-context $(kubectl config current-context) --namespace=default
+    #kubectl create -f replicaset.yml
+    #kubectl  get pod 
+    #kubectl get pod -n mytcs 
+    
+    To check the resources in all other namespaces:
+    #kubectl  get pod -A
+    
+    To check the current Namespace we are in:
+        kubectl config get-contexts
+    
+    Service:
+    
+
+        $ kubectl create deploy nginxsvc  - -image=nginx --dry-run=client -o yaml > nginxsvc.yml
+
+    $ kubectl create –f nginxsvc.yml 
+
+ List all the objects using 'kubectl get all' 
+    $ kubectl get all 
+
+ Expose the service
+    $ kubectl expose deploy nginxsvc --port=80  
+    $kubectl describe svc nginxsvc  
+Name:              nginxsvc 
+Namespace:         default 
+Labels:            app=nginxsvc 
+Annotations:       <none> 
+Selector:          app=nginxsvc 
+Type:              ClusterIP 
+IP Family Policy:  SingleStack 
+IP Families:       IPv4 
+IP:                10.96.24.47 
+IPs:               10.96.24.47 
+Port:              <unset>  80/TCP 
+TargetPort:        80/TCP 
+Endpoints:         10.244.1.3:80,10.244.1.4:80,10.244.2.3:80 
+Session Affinity:  None 
+Events:            <none> 
+$  
+ $ kubectl get all 
+
+ Get the yaml output of the service. 
+ 
+$ kubectl get svc nginxsvc -o yaml  
+apiVersion: v1 
+kind: Service 
+metadata: 
+  creationTimestamp: "2023-11-16T09:33:08Z" 
+  labels: 
+    app: nginxsvc 
+  name: nginxsvc 
+  namespace: default 
+  resourceVersion: "39621" 
+  uid: a76667f4-b058-44d4-bd02-796ad6d23278 
+spec: 
+  clusterIP: 10.96.24.47 
+  clusterIPs: 
+  - 10.96.24.47 
+  internalTrafficPolicy: Cluster 
+  ipFamilies: 
+  - IPv4 
+  ipFamilyPolicy: SingleStack 
+  ports: 
+  - port: 80 
+    protocol: TCP 
+    targetPort: 80 
+  selector: 
+    app: nginxsvc 
+  sessionAffinity: None 
+  type: ClusterIP 
+status: 
+  loadBalancer: {} 
+$  
+
+ Gather the endpoint and service IP. 
+$ kubectl get endpoints  
+NAME         ENDPOINTS                                   AGE 
+kubernetes   172.18.0.4:6443                             14h 
+nginxsvc     10.244.1.3:80,10.244.1.4:80,10.244.2.3:80   2m41s 
+$  
+$ kubectl get svc  
+NAME         TYPE        CLUSTER-IP    EXTERNAL-IP   PORT(S)   AGE 
+kubernetes   ClusterIP   10.96.0.1     <none>        443/TCP   14h 
+nginxsvc     ClusterIP   10.96.24.47   <none>        80/TCP    2m51s 
+$  
+
+Edit the service and update the type as NodePort. After editing the contents should be similar to next step
+$ kubectl edit svc nginxsvc  
+service/nginxsvc edited 
+
+Get the yaml form of service configuration. Additions highlighted in bold. 
+$ kubectl get svc nginxsvc -o yaml  
+apiVersion: v1 
+kind: Service 
+metadata: 
+  creationTimestamp: "2023-11-16T09:33:08Z" 
+  labels: 
+    app: nginxsvc 
+  name: nginxsvc 
+  namespace: default 
+  resourceVersion: "40350" 
+  uid: a76667f4-b058-44d4-bd02-796ad6d23278 
+spec: 
+  clusterIP: 10.96.24.47 
+  clusterIPs: 
+  - 10.96.24.47 
+  externalTrafficPolicy: Cluster 
+  internalTrafficPolicy: Cluster 
+  ipFamilies: 
+  - IPv4 
+  ipFamilyPolicy: SingleStack 
+  ports: 
+  - **nodePort: 32000** 
+    port: 80 
+    protocol: TCP 
+    targetPort: 80 
+  selector: 
+    app: nginxsvc 
+  sessionAffinity: None 
+  **type: NodePort** 
+status: 
+  loadBalancer: {} 
+
+ Find the node in which application pod is running. 
+$ kubectl get pod -o wide  
+NAME                        READY   STATUS    RESTARTS   AGE     IP           NODE           NOMINATED NODE   READINESS GATES 
+nginxsvc-6f45cc47b4-2qcbb   1/1     Running   0          8m51s   10.244.2.3   kind-worker2   <none>           <none> 
+nginxsvc-6f45cc47b4-6cw7z   1/1     Running   0          9m18s   10.244.1.3   kind-worker    <none>           <none> 
+nginxsvc-6f45cc47b4-l7x4k   1/1     Running   0          8m51s   10.244.1.4   kind-worker    <none>           <none> 
+$  
+
+Access the application using node IP and nodePort. 
+$ curl http://172.18.0.3:32000 
+<!DOCTYPE html> 
+<html> 
+<head> 
+<title>Welcome to nginx!</title> 
+<style> 
+html { color-scheme: light dark; } 
+body { width: 35em; margin: 0 auto; 
+font-family: Tahoma, Verdana, Arial, sans-serif; } 
+</style> 
+</head> 
+<body> 
+<h1>Welcome to nginx!</h1> 
+<p>If you see this page, the nginx web server is successfully installed and 
+working. Further configuration is required.</p> 
+ 
+<p>For online documentation and support please refer to 
+<a href="http://nginx.org/">nginx.org</a>.<br/> 
+Commercial support is available at 
+<a href="http://nginx.com/">nginx.com</a>.</p> 
+ 
+<p><em>Thank you for using nginx.</em></p> 
+</body> 
+</html> 
+$  
+
+--------------------
+22Aug24:
+Limits/Resources:
+    
+    Create deployment and assign limits and requests:    
+
+    [root@master ~]# cat resdeploy.yml
+
+    apiVersion: apps/v1
+
+    kind: Deployment
+
+    metadata:
+
+      creationTimestamp: null
+
+      labels:
+
+        app: resdeploy
+
+      name: resdeploy
+
+    spec:
+
+      replicas: 1
+
+      selector:
+
+        matchLabels:
+
+          app: resdeploy
+
+      strategy: {}
+
+      template:
+
+        metadata:
+
+          creationTimestamp: null
+
+          labels:
+
+            app: resdeploy
+
+        spec:
+
+          containers:
+
+          - image: nginx
+
+            name: nginx
+
+            resources: 
+
+              limits:
+
+                cpu: 200m
+
+                memory: 200Mi
+
+              requests:
+
+                cpu: 100m
+
+                memory: 100Mi
+
+    status: {}
+
+    [root@master ~]# 
+
+
+    [root@master ~]# kubectl get pod -o wide
+NAME                         READY   STATUS    RESTARTS   AGE   IP            NODE                NOMINATED NODE   READINESS GATES
+resdeploy-79b575988b-vtvc4   1/1     Running   0          18m   192.168.0.4   node2.example.com   <none>           <none>
+[root@master ~]# 
+
+Change the values in requests/limits:
+
+[root@master ~]# cat resdeploy.yml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+    app: resdeploy
+  name: resdeploy
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: resdeploy
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: resdeploy
+    spec:
+      containers:
+      - image: nginx
+        name: nginx
+        resources: 
+          limits:
+            cpu: 200m
+            memory: 200Gi
+          requests:
+            cpu: 100m
+            memory: 100Gi
+status: {}
+[root@master ~]# 
+
+[root@master ~]# kubectl get pod 
+NAME                         READY   STATUS    RESTARTS   AGE
+resdeploy-86bcb759c5-xpjfc   0/1     Pending   0          2s
+[root@master ~]# 
+
+[root@master ~]# kubectl get events | grep -i insuffi
+42s         Warning   FailedScheduling         pod/resdeploy-86bcb759c5-xpjfc    0/3 nodes are available: 1 node(s) had untolerated taint {node-role.kubernetes.io/control-plane: }, 2 Insufficient memory. preemption: 0/3 nodes are available: 1 Preemption is not helpful for scheduling, 2 No preemption victims found for incoming pod.
+[root@master ~]# 
+
+Now change back to original values and find the status:
+
+    [root@master ~]# cat resdeploy.yml
+
+    apiVersion: apps/v1
+
+    kind: Deployment
+
+    metadata:
+
+      creationTimestamp: null
+
+      labels:
+
+        app: resdeploy
+
+      name: resdeploy
+
+    spec:
+
+      replicas: 1
+
+      selector:
+
+        matchLabels:
+
+          app: resdeploy
+
+      strategy: {}
+
+      template:
+
+        metadata:
+
+          creationTimestamp: null
+
+          labels:
+
+            app: resdeploy
+
+        spec:
+
+          containers:
+
+          - image: nginx
+
+            name: nginx
+
+            resources: 
+
+              limits:
+
+                cpu: 200m
+
+                memory: 200Mi
+
+              requests:
+
+                cpu: 100m
+
+                memory: 100Mi
+
+    status: {}
+
+    [root@master ~]# 
+
+
+    [root@master ~]# kubectl get pod -o wide
+NAME                         READY   STATUS    RESTARTS   AGE   IP            NODE                NOMINATED NODE   READINESS GATES
+resdeploy-79b575988b-vtvc4   1/1     Running   0          18m   192.168.0.4   node2.example.com   <none>           <none>
+[root@master ~]# 
+
+[root@master ~]# kubectl describe node node2
+Name:               node2.example.com
+Roles:              <none>
+Labels:             beta.kubernetes.io/arch=amd64
+                    beta.kubernetes.io/os=linux
+                    kubernetes.io/arch=amd64
+                    kubernetes.io/hostname=node2.example.com
+                    kubernetes.io/os=linux
+Annotations:        flannel.alpha.coreos.com/backend-data: {"VNI":1,"VtepMAC":"1a:86:a4:20:a0:f5"}
+                    flannel.alpha.coreos.com/backend-type: vxlan
+                    flannel.alpha.coreos.com/kube-subnet-manager: true
+                    flannel.alpha.coreos.com/public-ip: 10.0.11.103
+                    kubeadm.alpha.kubernetes.io/cri-socket: unix:///var/run/containerd/containerd.sock
+                    node.alpha.kubernetes.io/ttl: 0
+                    volumes.kubernetes.io/controller-managed-attach-detach: true
+CreationTimestamp:  Tue, 20 Aug 2024 22:46:14 +0530
+Taints:             <none>
+Unschedulable:      false
+Lease:
+  HolderIdentity:  node2.example.com
+  AcquireTime:     <unset>
+  RenewTime:       Thu, 22 Aug 2024 10:28:42 +0530
+......
+Addresses:
+  InternalIP:  10.0.11.103
+  Hostname:    node2.example.com
+Capacity:
+  cpu:                2
+  ephemeral-storage:  64157076Ki
+  hugepages-1Gi:      0
+  hugepages-2Mi:      0
+  memory:             7882440Ki
+  pods:               110
+Allocatable:
+  cpu:                2
+  ephemeral-storage:  59127161144
+  hugepages-1Gi:      0
+  hugepages-2Mi:      0
+  memory:             7780040Ki
+  pods:               110
+System Info:
+  Machine ID:                 208eb4086c764575b018e1a1e227670d
+  System UUID:                b2090842-45fa-d9d0-8017-c0b380dc5d49
+  Boot ID:                    6ee665d7-f230-413b-9525-a13b2b777c9e
+  Kernel Version:             4.18.0-553.el8_10.x86_64
+  OS Image:                   Rocky Linux 8.10 (Green Obsidian)
+  Operating System:           linux
+  Architecture:               amd64
+  Container Runtime Version:  containerd://1.6.10
+  Kubelet Version:            v1.29.8
+  Kube-Proxy Version:         v1.29.8
+PodCIDR:                      192.168.0.0/24
+PodCIDRs:                     192.168.0.0/24
+Non-terminated Pods:          (4 in total)
+  Namespace                   Name                           CPU Requests  CPU Limits  Memory Requests  Memory Limits  Age
+  ---------                   ----                           ------------  ----------  ---------------  -------------  ---
+  classwork                   resdeploy-79b575988b-9hmwr     100m (5%)     200m (10%)  100Mi (1%)       200Mi (2%)     14s
+  kube-flannel                kube-flannel-ds-tglvz          100m (5%)     0 (0%)      50Mi (0%)        0 (0%)         35h
+  kube-system                 fluentd-elasticsearch-xrmz9    100m (5%)     0 (0%)      200Mi (2%)       200Mi (2%)     35h
+  kube-system                 kube-proxy-28bgv               0 (0%)        0 (0%)      0 (0%)           0 (0%)         35h
+==============
+$ kubectl create deploy resdeploy  - -image=nginx --dry-run=client -o yaml > resdeploy.yml
+==============
+
+DaemonSet:
+    Create a DaemonSet with the below file.  
+    Note: Using deployment dry-run you can create with modifications
+[root@master ~]# cat daemonsetUP.yml
+apiVersion: apps/v1
+kind: DaemonSet
+metadata: 
+  name: mydset
+  labels:
+    app: dset-ds
+    type: mydset
+spec:
+  template:
+    metadata:
+      name: mydset-pod
+      labels:
+        app: dset-pod
+        type: mydset
+    spec:
+      containers:
+      - image: nginx
+        name: mydsetcont
+  selector:
+    matchLabels:
+      type: mydset
+
+[root@master ~]# 
+[root@master ~]# kubectl create -f daemonsetUP.yml 
+
+[root@master ~]# kubectl get ds
+NAME     DESIRED   CURRENT   READY   UP-TO-DATE   AVAILABLE   NODE SELECTOR   AGE
+mydset   2         2         2       2            2           <none>          33m
+[root@master ~]# 
+
+Below output shows that 2 different instances are running in 2 different nodes (each node one instance)
+[root@master ~]# kubectl get pod -o wide
+NAME           READY   STATUS    RESTARTS   AGE     IP             NODE                NOMINATED NODE   READINESS GATES
+mydset-gxvw4   1/1     Running   0          34m     192.168.0.6    node2.example.com   <none>           <none>
+mydset-zfz6w   1/1     Running   0          29m     192.168.0.14   node1.example.com   <none>           <none>
+[root@master ~]# 
+
+========Excercise completed===================
+
+Create a new node (node3.example.com) and include the same in this cluster with join command:
+    Once included, then we can able to see the Daemonset is running on the new node also.  
+    
+[root@master ~]# kubectl get ds
+NAME     DESIRED   CURRENT   READY   UP-TO-DATE   AVAILABLE   NODE SELECTOR   AGE
+mydset   3         3         3       3            3           <none>          43m
+[root@master ~]# kubectl get pod -o wide
+NAME           READY   STATUS    RESTARTS   AGE   IP             NODE                NOMINATED NODE   READINESS GATES
+mydset-9p7wt   1/1     Running   0          17m   192.168.0.2    node3.example.com   <none>           <none>
+mydset-gxvw4   1/1     Running   0          43m   192.168.0.6    node2.example.com   <none>           <none>
+mydset-zfz6w   1/1     Running   0          38m   192.168.0.14   node1.example.com   <none>           <none>
+[root@master ~]# 
+
+Without any commands, by default the new node is running with the above pods which are considered as DaemonSet (Agents on nodes):
+    ====
 
