@@ -922,3 +922,185 @@ mydset-zfz6w   1/1     Running   0          38m   192.168.0.14   node1.example.c
 Without any commands, by default the new node is running with the above pods which are considered as DaemonSet (Agents on nodes):
     ====
 
+Storage:
+    
+ StorageClass:
+ [root@master murali-21aug]# vim storageclass.yml
+apiVersion: storage.k8s.io/v1 
+kind: StorageClass 
+metadata: 
+  name: localdisk 
+provisioner: kubernetes.io/no-provisioner
+allowVolumeExpansion: true
+
+[root@master murali-21aug]# 
+
+[root@master murali-21aug]#  kubectl create -f storageclass.yml
+[root@master murali-21aug]#   kubectl get sc
+
+Note: this StorageClass is a global object
+
+PersistentVolume:
+    
+[root@master murali-21aug]# vim host-pv.yml 
+kind: PersistentVolume 
+apiVersion: v1 
+metadata: 
+   name: host-pv 
+spec: 
+   storageClassName: localdisk
+   persistentVolumeReclaimPolicy: Recycle 
+   capacity: 
+      storage: 1Gi 
+   accessModes: 
+      - ReadWriteOnce 
+   hostPath: 
+      path: /var/output          ---------------------> host mountpoint 
+------save----- 
+
+[root@master murali-21aug]# kubectl create -f host-pv.yml
+[root@master murali-21aug]# kubectl get pv
+Note:  PV is also a global object - which we can able to access from any namespace (project)
+
+PersistentVolumeClaim(PVC):
+    
+    [root@master murali-21aug]# vim host-pvc.yml
+apiVersion: v1 
+kind: PersistentVolumeClaim 
+metadata: 
+   name: host-pvc 
+spec: 
+   storageClassName: localdisk 
+   accessModes: 
+      - ReadWriteOnce 
+   resources: 
+      requests: 
+         storage: 500Mi
+[root@master murali-21aug]# 
+
+Note:  PVC is a namespace specific
+    
+App/Pod Creation using Deployment:
+
+[root@master murali-21aug]# vim deployment-hostpv.yml 
+apiVersion: apps/v1
+kind: Deployment
+metadata: 
+  name: myapps-dep
+  labels:
+    app: myapp
+    type: front-end
+spec:
+  template:
+    metadata:
+      name: myapp-dep-pod
+      labels:
+        app: myapp-dep
+        type: front-end
+    spec:
+      containers:
+      - image: busybox
+        name: busycont
+        command: ['sh', '-c', 'while true; do echo Success! >> /output/success.txt; sleep 5; done'] 
+        volumeMounts:
+        - name: pv-storage
+          mountPath: /output   --> Mountpoint on the pod 
+      volumes:
+      - name: pv-storage
+        persistentVolumeClaim:
+          claimName: host-pvc
+  replicas: 1
+  selector:
+    matchLabels:
+      type: front-end
+
+[root@master murali-21aug]# 
+
+Note: Pod is always a namespace specific
+
+=======
+
+[root@master 22Aug24]#vim nodename.yml 
+apiVersion: v1
+kind: Pod
+metadata:
+  name: nginx
+  labels:
+    name: nginx
+spec:
+  containers:
+    - name: nginx
+      image: nginx
+      ports:
+        - containerPort: 8080
+  nodeName: node3.example.com
+[root@master 22Aug24]# 
+
+[root@master 22Aug24]# kubectl create -f nodename.yml 
+--> check the pod is schedule on the node3.example.com (in my case)
+
+Cleanup above steps
+
+NodeSelector:
+
+[root@master 22Aug24]# cat nodeselector.yml 
+apiVersion: v1
+kind: Pod
+metadata:
+  name: myapp-pod
+spec:
+  containers:
+    - name: data-processor
+      image: nginx
+  nodeSelector:
+    env: prod
+[root@master 22Aug24]# 
+
+[root@master 22Aug24]# kubectl label node node1.example.com env=prod
+
+[root@master 22Aug24]# kubectl create -f nodeselector.yml
+---> check that the pod is running on node1 as its labled with env=prod
+
+Taint/Tolerations:
+
+#kubectl taint node node1.example.com color=orange:NoSchedule 
+#kubectl describe node node1.example.com | grep Taint
+-- verify the node is tainted----
+#kubectl create -f deployment.yml 
+-- note that the deployment will not go to node1 as its tainted. 
+
+NoSchedule:  No further deployments will be allowed but not bother about existing pods in the node
+NoExecute: No further deployments will be allowed but will evict the existing pods also in the node
+PreferrableSchedule:  Worst case it will allow to deploy the pod.
+
+Check with multiple options --- check for recordings 
+
+
+
+
+
+
+
+
+
+
+
+=====
+Helm Charts:
+    
+    https://helm.sh/docs/intro/install/
+    
+      $helm search repo bitnami
+  $helm repo add bitnami https://charts.bitnami.com/bitnami
+
+
+     $ helm repo update              
+
+     
+
+     $ helm install bitnami/mysql --generate-name
+
+
+       $ helm list
+
+ ======
