@@ -1,0 +1,420 @@
+[root@minikube ~]# dnf config-manager --add-repo=https://download.docker.com/linux/centos/docker-ce.repo
+Adding repo from: https://download.docker.com/linux/centos/docker-ce.repo
+[root@minikube ~]# dnf replolist
+No such command: replolist. Please use /usr/bin/dnf --help
+It could be a DNF plugin command, try: "dnf install 'dnf-command(replolist)'"
+[root@minikube ~]# dnf repolist
+repo id                                                  repo name
+appstream                                                Rocky Linux 8 - AppStream
+baseos                                                   Rocky Linux 8 - BaseOS
+docker-ce-stable                                         Docker CE Stable - x86_64
+epel                                                     Extra Packages for Enterprise Linux 8 - x86_64
+extras                                                   Rocky Linux 8 - Extras
+[root@minikube ~]# dnf install docker-ce docker-ce-cli containerd.io -y
+Docker CE Stable - x86_64                                                                                       355 kB/s |  66 kB     00:00    
+Error: 
+ Problem 1: problem with installed package podman-4:4.9.4-1.module+el8.10.0+1815+5fe7415e.x86_64
+  - package podman-4:4.9.4-1.module+el8.10.0+1815+5fe7415e.x86_64 from @System requires runc >= 1.0.0-57, but none of the providers can be installed
+  - package podman-4:4.9.4-1.module+el8.10.0+1815+5fe7415e.x86_64 from appstream requires runc >= 1.0.0-57, but none of the providers can be installed
+  - package podman-4:4.9.4-1.module+el8.10.0+1825+623b0c20.x86_64 from appstream requires runc >= 1.0.0-57, but none of the providers can be installed
+  - package podman-4:4.9.4-12.module+el8.10.0+1843+6892ab28.x86_64 from appstream requires runc >= 1.0.0-57, but none of the providers can be installed
+  - package podman-4:4.9.4-3.module+el8.10.0+1829+9bb2696f.x86_64 from appstream requires runc >= 1.0.0-57, but none of the providers can be installed
+  - package podman-4:4.9.4-4.module+el8.10.0+1833+b6e0f287.x86_64 from appstream requires runc >= 1.0.0-57, but none of the providers can be installed
+  - package containerd.io-1.6.32-3.1.el8.x86_64 from docker-ce-stable conflicts with runc provided by runc-1:1.1.12-1.module+el8.10.0+1815+5fe7415e.x86_64 from @System
+  - package containerd.io-1.6.32-3.1.el8.x86_64 from docker-ce-stable obsoletes runc provided by runc-1:1.1.12-1.module+el8.10.0+1815+5fe7415e.x86_64 from @System
+  - package containerd.io-1.6.32-3.1.el8.x86_64 from docker-ce-stable conflicts with runc provided by runc-1:1.1.12-1.module+el8.10.0+1815+5fe7415e.x86_64 from appstream
+  - package containerd.io-1.6.32-3.1.el8.x86_64 from docker-ce-stable obsoletes runc provided by runc-1:1.1.12-1.module+el8.10.0+1815+5fe7415e.x86_64 from appstream
+  - package containerd.io-1.6.32-3.1.el8.x86_64 from docker-ce-stable conflicts with runc provided by runc-1:1.1.12-1.module+el8.10.0+1825+623b0c20.x86_64 from appstream
+  - package containerd.io-1.6.32-3.1.el8.x86_64 from docker-ce-stable obsoletes runc provided by runc-1:1.1.12-1.module+el8.10.0+1825+623b0c20.x86_64 from appstream
+  - package containerd.io-1.6.32-3.1.el8.x86_64 from docker-ce-stable conflicts with runc provided by runc-1:1.1.12-4.module+el8.10.0+1843+6892ab28.x86_64 from appstream
+  - package containerd.io-1.6.32-3.1.el8.x86_64 from docker-ce-stable obsoletes runc provided by runc-1:1.1.12-4.module+el8.10.0+1843+6892ab28.x86_64 from appstream
+  - cannot install the best candidate for the job
+  - package runc-1.0.0-66.rc10.module+el8.5.0+770+e2f49861.x86_64 from appstream is filtered out by modular filtering
+  - package runc-1.0.0-73.rc95.module+el8.7.0+1152+ac778627.x86_64 from appstream is filtered out by modular filtering
+  - package runc-1:1.1.5-2.module+el8.9.0+1445+07728297.x86_64 from appstream is filtered out by modular filtering
+ Problem 2: problem with installed package podman-catatonit-4:4.9.4-1.module+el8.10.0+1815+5fe7415e.x86_64
+  - package podman-catatonit-4:4.9.4-1.module+el8.10.0+1815+5fe7415e.x86_64 from appstream requires podman = 4:4.9.4-1.module+el8.10.0+1815+5fe7415e, but none of the providers can be installed
+  - package podman-catatonit-4:4.9.4-1.module+el8.10.0+1815+5fe7415e.x86_64 from @System requires podman = 4:4.9.4-1.module+el8.10.0+1815+5fe7415e, but none of the providers can be installed
+  - package podman-4:4.9.4-1.module+el8.10.0+1815+5fe7415e.x86_64 from appstream requires runc >= 1.0.0-57, but none of the providers can be installed
+  - package containerd.io-1.6.24-3.1.el8.x86_64 from docker-ce-stable conflicts with runc provided by runc-1:1.1.12-1.module+el8.10.0+1815+5fe7415e.x86_64 from appstream
+  - package containerd.io-1.6.24-3.1.el8.x86_64 from docker-ce-stable obsoletes runc provided by runc-1:1.1.12-1.module+el8.10.0+1815+5fe7415e.x86_64 from appstream
+  - package containerd.io-1.6.24-3.1.el8.x86_64 from docker-ce-stable conflicts with runc provided by runc-1:1.1.12-1.module+el8.10.0+1825+623b0c20.x86_64 from appstream
+  - package containerd.io-1.6.24-3.1.el8.x86_64 from docker-ce-stable obsoletes runc provided by runc-1:1.1.12-1.module+el8.10.0+1825+623b0c20.x86_64 from appstream
+  - package containerd.io-1.6.24-3.1.el8.x86_64 from docker-ce-stable conflicts with runc provided by runc-1:1.1.12-4.module+el8.10.0+1843+6892ab28.x86_64 from appstream
+  - package containerd.io-1.6.24-3.1.el8.x86_64 from docker-ce-stable obsoletes runc provided by runc-1:1.1.12-4.module+el8.10.0+1843+6892ab28.x86_64 from appstream
+  - package docker-ce-3:26.1.3-1.el8.x86_64 from docker-ce-stable requires containerd.io >= 1.6.24, but none of the providers can be installed
+  - package containerd.io-1.6.25-3.1.el8.x86_64 from docker-ce-stable conflicts with runc provided by runc-1:1.1.12-1.module+el8.10.0+1815+5fe7415e.x86_64 from appstream
+  - package containerd.io-1.6.25-3.1.el8.x86_64 from docker-ce-stable obsoletes runc provided by runc-1:1.1.12-1.module+el8.10.0+1815+5fe7415e.x86_64 from appstream
+  - package containerd.io-1.6.25-3.1.el8.x86_64 from docker-ce-stable conflicts with runc provided by runc-1:1.1.12-1.module+el8.10.0+1825+623b0c20.x86_64 from appstream
+  - package containerd.io-1.6.25-3.1.el8.x86_64 from docker-ce-stable obsoletes runc provided by runc-1:1.1.12-1.module+el8.10.0+1825+623b0c20.x86_64 from appstream
+  - package containerd.io-1.6.25-3.1.el8.x86_64 from docker-ce-stable conflicts with runc provided by runc-1:1.1.12-4.module+el8.10.0+1843+6892ab28.x86_64 from appstream
+  - package containerd.io-1.6.25-3.1.el8.x86_64 from docker-ce-stable obsoletes runc provided by runc-1:1.1.12-4.module+el8.10.0+1843+6892ab28.x86_64 from appstream
+  - package containerd.io-1.6.24-3.1.el8.x86_64 from docker-ce-stable conflicts with runc provided by runc-1:1.1.12-1.module+el8.10.0+1815+5fe7415e.x86_64 from @System
+  - package containerd.io-1.6.24-3.1.el8.x86_64 from docker-ce-stable obsoletes runc provided by runc-1:1.1.12-1.module+el8.10.0+1815+5fe7415e.x86_64 from @System
+  - package containerd.io-1.6.25-3.1.el8.x86_64 from docker-ce-stable conflicts with runc provided by runc-1:1.1.12-1.module+el8.10.0+1815+5fe7415e.x86_64 from @System
+  - package containerd.io-1.6.25-3.1.el8.x86_64 from docker-ce-stable obsoletes runc provided by runc-1:1.1.12-1.module+el8.10.0+1815+5fe7415e.x86_64 from @System
+  - package containerd.io-1.6.26-3.1.el8.x86_64 from docker-ce-stable conflicts with runc provided by runc-1:1.1.12-1.module+el8.10.0+1815+5fe7415e.x86_64 from @System
+  - package containerd.io-1.6.26-3.1.el8.x86_64 from docker-ce-stable obsoletes runc provided by runc-1:1.1.12-1.module+el8.10.0+1815+5fe7415e.x86_64 from @System
+  - package containerd.io-1.6.27-3.1.el8.x86_64 from docker-ce-stable conflicts with runc provided by runc-1:1.1.12-1.module+el8.10.0+1815+5fe7415e.x86_64 from @System
+  - package containerd.io-1.6.27-3.1.el8.x86_64 from docker-ce-stable obsoletes runc provided by runc-1:1.1.12-1.module+el8.10.0+1815+5fe7415e.x86_64 from @System
+  - package containerd.io-1.6.28-3.1.el8.x86_64 from docker-ce-stable conflicts with runc provided by runc-1:1.1.12-1.module+el8.10.0+1815+5fe7415e.x86_64 from @System
+  - package containerd.io-1.6.28-3.1.el8.x86_64 from docker-ce-stable obsoletes runc provided by runc-1:1.1.12-1.module+el8.10.0+1815+5fe7415e.x86_64 from @System
+  - package containerd.io-1.6.28-3.2.el8.x86_64 from docker-ce-stable conflicts with runc provided by runc-1:1.1.12-1.module+el8.10.0+1815+5fe7415e.x86_64 from @System
+  - package containerd.io-1.6.28-3.2.el8.x86_64 from docker-ce-stable obsoletes runc provided by runc-1:1.1.12-1.module+el8.10.0+1815+5fe7415e.x86_64 from @System
+  - package containerd.io-1.6.31-3.1.el8.x86_64 from docker-ce-stable conflicts with runc provided by runc-1:1.1.12-1.module+el8.10.0+1815+5fe7415e.x86_64 from @System
+  - package containerd.io-1.6.31-3.1.el8.x86_64 from docker-ce-stable obsoletes runc provided by runc-1:1.1.12-1.module+el8.10.0+1815+5fe7415e.x86_64 from @System
+  - package containerd.io-1.6.32-3.1.el8.x86_64 from docker-ce-stable conflicts with runc provided by runc-1:1.1.12-1.module+el8.10.0+1815+5fe7415e.x86_64 from @System
+  - package containerd.io-1.6.32-3.1.el8.x86_64 from docker-ce-stable obsoletes runc provided by runc-1:1.1.12-1.module+el8.10.0+1815+5fe7415e.x86_64 from @System
+  - cannot install the best candidate for the job
+  - package runc-1.0.0-66.rc10.module+el8.5.0+770+e2f49861.x86_64 from appstream is filtered out by modular filtering
+  - package runc-1.0.0-73.rc95.module+el8.7.0+1152+ac778627.x86_64 from appstream is filtered out by modular filtering
+  - package runc-1:1.1.5-2.module+el8.9.0+1445+07728297.x86_64 from appstream is filtered out by modular filtering
+  - package containerd.io-1.6.26-3.1.el8.x86_64 from docker-ce-stable conflicts with runc provided by runc-1:1.1.12-1.module+el8.10.0+1815+5fe7415e.x86_64 from appstream
+  - package containerd.io-1.6.26-3.1.el8.x86_64 from docker-ce-stable obsoletes runc provided by runc-1:1.1.12-1.module+el8.10.0+1815+5fe7415e.x86_64 from appstream
+  - package containerd.io-1.6.26-3.1.el8.x86_64 from docker-ce-stable conflicts with runc provided by runc-1:1.1.12-1.module+el8.10.0+1825+623b0c20.x86_64 from appstream
+  - package containerd.io-1.6.26-3.1.el8.x86_64 from docker-ce-stable obsoletes runc provided by runc-1:1.1.12-1.module+el8.10.0+1825+623b0c20.x86_64 from appstream
+  - package containerd.io-1.6.26-3.1.el8.x86_64 from docker-ce-stable conflicts with runc provided by runc-1:1.1.12-4.module+el8.10.0+1843+6892ab28.x86_64 from appstream
+  - package containerd.io-1.6.26-3.1.el8.x86_64 from docker-ce-stable obsoletes runc provided by runc-1:1.1.12-4.module+el8.10.0+1843+6892ab28.x86_64 from appstream
+  - package containerd.io-1.6.27-3.1.el8.x86_64 from docker-ce-stable conflicts with runc provided by runc-1:1.1.12-1.module+el8.10.0+1815+5fe7415e.x86_64 from appstream
+  - package containerd.io-1.6.27-3.1.el8.x86_64 from docker-ce-stable obsoletes runc provided by runc-1:1.1.12-1.module+el8.10.0+1815+5fe7415e.x86_64 from appstream
+  - package containerd.io-1.6.27-3.1.el8.x86_64 from docker-ce-stable conflicts with runc provided by runc-1:1.1.12-1.module+el8.10.0+1825+623b0c20.x86_64 from appstream
+  - package containerd.io-1.6.27-3.1.el8.x86_64 from docker-ce-stable obsoletes runc provided by runc-1:1.1.12-1.module+el8.10.0+1825+623b0c20.x86_64 from appstream
+  - package containerd.io-1.6.27-3.1.el8.x86_64 from docker-ce-stable conflicts with runc provided by runc-1:1.1.12-4.module+el8.10.0+1843+6892ab28.x86_64 from appstream
+  - package containerd.io-1.6.27-3.1.el8.x86_64 from docker-ce-stable obsoletes runc provided by runc-1:1.1.12-4.module+el8.10.0+1843+6892ab28.x86_64 from appstream
+  - package containerd.io-1.6.28-3.1.el8.x86_64 from docker-ce-stable conflicts with runc provided by runc-1:1.1.12-1.module+el8.10.0+1815+5fe7415e.x86_64 from appstream
+  - package containerd.io-1.6.28-3.1.el8.x86_64 from docker-ce-stable obsoletes runc provided by runc-1:1.1.12-1.module+el8.10.0+1815+5fe7415e.x86_64 from appstream
+  - package containerd.io-1.6.28-3.1.el8.x86_64 from docker-ce-stable conflicts with runc provided by runc-1:1.1.12-1.module+el8.10.0+1825+623b0c20.x86_64 from appstream
+  - package containerd.io-1.6.28-3.1.el8.x86_64 from docker-ce-stable obsoletes runc provided by runc-1:1.1.12-1.module+el8.10.0+1825+623b0c20.x86_64 from appstream
+  - package containerd.io-1.6.28-3.1.el8.x86_64 from docker-ce-stable conflicts with runc provided by runc-1:1.1.12-4.module+el8.10.0+1843+6892ab28.x86_64 from appstream
+  - package containerd.io-1.6.28-3.1.el8.x86_64 from docker-ce-stable obsoletes runc provided by runc-1:1.1.12-4.module+el8.10.0+1843+6892ab28.x86_64 from appstream
+  - package containerd.io-1.6.28-3.2.el8.x86_64 from docker-ce-stable conflicts with runc provided by runc-1:1.1.12-1.module+el8.10.0+1815+5fe7415e.x86_64 from appstream
+  - package containerd.io-1.6.28-3.2.el8.x86_64 from docker-ce-stable obsoletes runc provided by runc-1:1.1.12-1.module+el8.10.0+1815+5fe7415e.x86_64 from appstream
+  - package containerd.io-1.6.28-3.2.el8.x86_64 from docker-ce-stable conflicts with runc provided by runc-1:1.1.12-1.module+el8.10.0+1825+623b0c20.x86_64 from appstream
+  - package containerd.io-1.6.28-3.2.el8.x86_64 from docker-ce-stable obsoletes runc provided by runc-1:1.1.12-1.module+el8.10.0+1825+623b0c20.x86_64 from appstream
+  - package containerd.io-1.6.28-3.2.el8.x86_64 from docker-ce-stable conflicts with runc provided by runc-1:1.1.12-4.module+el8.10.0+1843+6892ab28.x86_64 from appstream
+  - package containerd.io-1.6.28-3.2.el8.x86_64 from docker-ce-stable obsoletes runc provided by runc-1:1.1.12-4.module+el8.10.0+1843+6892ab28.x86_64 from appstream
+  - package containerd.io-1.6.31-3.1.el8.x86_64 from docker-ce-stable conflicts with runc provided by runc-1:1.1.12-1.module+el8.10.0+1815+5fe7415e.x86_64 from appstream
+  - package containerd.io-1.6.31-3.1.el8.x86_64 from docker-ce-stable obsoletes runc provided by runc-1:1.1.12-1.module+el8.10.0+1815+5fe7415e.x86_64 from appstream
+  - package containerd.io-1.6.31-3.1.el8.x86_64 from docker-ce-stable conflicts with runc provided by runc-1:1.1.12-1.module+el8.10.0+1825+623b0c20.x86_64 from appstream
+  - package containerd.io-1.6.31-3.1.el8.x86_64 from docker-ce-stable obsoletes runc provided by runc-1:1.1.12-1.module+el8.10.0+1825+623b0c20.x86_64 from appstream
+  - package containerd.io-1.6.31-3.1.el8.x86_64 from docker-ce-stable conflicts with runc provided by runc-1:1.1.12-4.module+el8.10.0+1843+6892ab28.x86_64 from appstream
+  - package containerd.io-1.6.31-3.1.el8.x86_64 from docker-ce-stable obsoletes runc provided by runc-1:1.1.12-4.module+el8.10.0+1843+6892ab28.x86_64 from appstream
+  - package containerd.io-1.6.32-3.1.el8.x86_64 from docker-ce-stable conflicts with runc provided by runc-1:1.1.12-1.module+el8.10.0+1815+5fe7415e.x86_64 from appstream
+  - package containerd.io-1.6.32-3.1.el8.x86_64 from docker-ce-stable obsoletes runc provided by runc-1:1.1.12-1.module+el8.10.0+1815+5fe7415e.x86_64 from appstream
+  - package containerd.io-1.6.32-3.1.el8.x86_64 from docker-ce-stable conflicts with runc provided by runc-1:1.1.12-1.module+el8.10.0+1825+623b0c20.x86_64 from appstream
+  - package containerd.io-1.6.32-3.1.el8.x86_64 from docker-ce-stable obsoletes runc provided by runc-1:1.1.12-1.module+el8.10.0+1825+623b0c20.x86_64 from appstream
+  - package containerd.io-1.6.32-3.1.el8.x86_64 from docker-ce-stable conflicts with runc provided by runc-1:1.1.12-4.module+el8.10.0+1843+6892ab28.x86_64 from appstream
+  - package containerd.io-1.6.32-3.1.el8.x86_64 from docker-ce-stable obsoletes runc provided by runc-1:1.1.12-4.module+el8.10.0+1843+6892ab28.x86_64 from appstream
+  - package podman-catatonit-4:4.9.4-1.module+el8.10.0+1825+623b0c20.x86_64 from appstream requires podman = 4:4.9.4-1.module+el8.10.0+1825+623b0c20, but none of the providers can be installed
+  - package podman-4:4.9.4-1.module+el8.10.0+1825+623b0c20.x86_64 from appstream requires runc >= 1.0.0-57, but none of the providers can be installed
+  - package podman-catatonit-4:4.9.4-3.module+el8.10.0+1829+9bb2696f.x86_64 from appstream requires podman = 4:4.9.4-3.module+el8.10.0+1829+9bb2696f, but none of the providers can be installed
+  - package podman-4:4.9.4-3.module+el8.10.0+1829+9bb2696f.x86_64 from appstream requires runc >= 1.0.0-57, but none of the providers can be installed
+  - package podman-catatonit-4:4.9.4-4.module+el8.10.0+1833+b6e0f287.x86_64 from appstream requires podman = 4:4.9.4-4.module+el8.10.0+1833+b6e0f287, but none of the providers can be installed
+  - package podman-4:4.9.4-4.module+el8.10.0+1833+b6e0f287.x86_64 from appstream requires runc >= 1.0.0-57, but none of the providers can be installed
+  - package podman-catatonit-4:4.9.4-12.module+el8.10.0+1843+6892ab28.x86_64 from appstream requires podman = 4:4.9.4-12.module+el8.10.0+1843+6892ab28, but none of the providers can be installed
+  - package podman-4:4.9.4-12.module+el8.10.0+1843+6892ab28.x86_64 from appstream requires runc >= 1.0.0-57, but none of the providers can be installed
+  - package podman-4:4.9.4-1.module+el8.10.0+1815+5fe7415e.x86_64 from @System requires runc >= 1.0.0-57, but none of the providers can be installed
+(try to add '--allowerasing' to command line to replace conflicting packages or '--skip-broken' to skip uninstallable packages or '--nobest' to use not only best candidate packages)
+[root@minikube ~]# yum remove -y runc*
+Dependencies resolved.
+================================================================================================================================================
+ Package                          Architecture         Version                                                   Repository                Size
+================================================================================================================================================
+Removing:
+ runc                             x86_64               1:1.1.12-1.module+el8.10.0+1815+5fe7415e                  @AppStream               9.9 M
+Removing dependent packages:
+ buildah                          x86_64               1:1.34.0-1.module+el8.10.0+1815+5fe7415e                  @AppStream                31 M
+ cockpit-podman                   noarch               84.1-1.module+el8.10.0+1815+5fe7415e                      @AppStream               682 k
+ podman                           x86_64               4:4.9.4-1.module+el8.10.0+1815+5fe7415e                   @AppStream                52 M
+Removing unused dependencies:
+ conmon                           x86_64               3:2.1.10-1.module+el8.10.0+1815+5fe7415e                  @AppStream               172 k
+ container-selinux                noarch               2:2.229.0-2.module+el8.10.0+1815+5fe7415e                 @AppStream                67 k
+ containers-common                x86_64               2:1-81.module+el8.10.0+1815+5fe7415e                      @AppStream               580 k
+ criu                             x86_64               3.18-5.module+el8.10.0+1815+5fe7415e                      @AppStream               1.5 M
+ fuse-overlayfs                   x86_64               1.13-1.module+el8.10.0+1815+5fe7415e                      @AppStream               128 k
+ fuse3                            x86_64               3.3.0-18.el8                                              @anaconda                100 k
+ fuse3-libs                       x86_64               3.3.0-18.el8                                              @anaconda                274 k
+ libnet                           x86_64               1.1.6-15.el8                                              @AppStream               151 k
+ libslirp                         x86_64               4.4.0-2.module+el8.10.0+1815+5fe7415e                     @AppStream               134 k
+ podman-catatonit                 x86_64               4:4.9.4-1.module+el8.10.0+1815+5fe7415e                   @AppStream               794 k
+ podman-gvproxy                   x86_64               4:4.9.4-1.module+el8.10.0+1815+5fe7415e                   @AppStream                13 M
+ podman-plugins                   x86_64               4:4.9.4-1.module+el8.10.0+1815+5fe7415e                   @AppStream               3.6 M
+ shadow-utils-subid               x86_64               2:4.6-22.el8                                              @anaconda                205 k
+ slirp4netns                      x86_64               1.2.3-1.module+el8.10.0+1815+5fe7415e                     @AppStream               107 k
+
+Transaction Summary
+================================================================================================================================================
+Remove  18 Packages
+
+Freed space: 113 M
+Running transaction check
+Transaction check succeeded.
+Running transaction test
+Transaction test succeeded.
+Running transaction
+  Preparing        :                                                                                                                        1/1 
+  Running scriptlet: buildah-1:1.34.0-1.module+el8.10.0+1815+5fe7415e.x86_64                                                                1/1 
+  Erasing          : buildah-1:1.34.0-1.module+el8.10.0+1815+5fe7415e.x86_64                                                               1/18 
+  Erasing          : cockpit-podman-84.1-1.module+el8.10.0+1815+5fe7415e.noarch                                                            2/18 
+  Running scriptlet: podman-4:4.9.4-1.module+el8.10.0+1815+5fe7415e.x86_64                                                                 3/18 
+  Erasing          : podman-4:4.9.4-1.module+el8.10.0+1815+5fe7415e.x86_64                                                                 3/18 
+  Running scriptlet: podman-4:4.9.4-1.module+el8.10.0+1815+5fe7415e.x86_64                                                                 3/18 
+  Erasing          : containers-common-2:1-81.module+el8.10.0+1815+5fe7415e.x86_64                                                         4/18 
+  Erasing          : fuse-overlayfs-1.13-1.module+el8.10.0+1815+5fe7415e.x86_64                                                            5/18 
+  Erasing          : fuse3-3.3.0-18.el8.x86_64                                                                                             6/18 
+  Erasing          : slirp4netns-1.2.3-1.module+el8.10.0+1815+5fe7415e.x86_64                                                              7/18 
+  Erasing          : runc-1:1.1.12-1.module+el8.10.0+1815+5fe7415e.x86_64                                                                  8/18 
+  Erasing          : criu-3.18-5.module+el8.10.0+1815+5fe7415e.x86_64                                                                      9/18 
+  Erasing          : podman-plugins-4:4.9.4-1.module+el8.10.0+1815+5fe7415e.x86_64                                                        10/18 
+  Erasing          : container-selinux-2:2.229.0-2.module+el8.10.0+1815+5fe7415e.noarch                                                   11/18 
+  Running scriptlet: container-selinux-2:2.229.0-2.module+el8.10.0+1815+5fe7415e.noarch                                                   11/18 
+  Erasing          : podman-catatonit-4:4.9.4-1.module+el8.10.0+1815+5fe7415e.x86_64                                                      12/18 
+  Running scriptlet: podman-catatonit-4:4.9.4-1.module+el8.10.0+1815+5fe7415e.x86_64                                                      12/18 
+  Erasing          : podman-gvproxy-4:4.9.4-1.module+el8.10.0+1815+5fe7415e.x86_64                                                        13/18 
+  Erasing          : libnet-1.1.6-15.el8.x86_64                                                                                           14/18 
+  Running scriptlet: libnet-1.1.6-15.el8.x86_64                                                                                           14/18 
+  Erasing          : libslirp-4.4.0-2.module+el8.10.0+1815+5fe7415e.x86_64                                                                15/18 
+  Erasing          : fuse3-libs-3.3.0-18.el8.x86_64                                                                                       16/18 
+  Running scriptlet: fuse3-libs-3.3.0-18.el8.x86_64                                                                                       16/18 
+  Erasing          : conmon-3:2.1.10-1.module+el8.10.0+1815+5fe7415e.x86_64                                                               17/18 
+  Erasing          : shadow-utils-subid-2:4.6-22.el8.x86_64                                                                               18/18 
+  Running scriptlet: shadow-utils-subid-2:4.6-22.el8.x86_64                                                                               18/18 
+  Verifying        : buildah-1:1.34.0-1.module+el8.10.0+1815+5fe7415e.x86_64                                                               1/18 
+  Verifying        : cockpit-podman-84.1-1.module+el8.10.0+1815+5fe7415e.noarch                                                            2/18 
+  Verifying        : conmon-3:2.1.10-1.module+el8.10.0+1815+5fe7415e.x86_64                                                                3/18 
+  Verifying        : container-selinux-2:2.229.0-2.module+el8.10.0+1815+5fe7415e.noarch                                                    4/18 
+  Verifying        : containers-common-2:1-81.module+el8.10.0+1815+5fe7415e.x86_64                                                         5/18 
+  Verifying        : criu-3.18-5.module+el8.10.0+1815+5fe7415e.x86_64                                                                      6/18 
+  Verifying        : fuse-overlayfs-1.13-1.module+el8.10.0+1815+5fe7415e.x86_64                                                            7/18 
+  Verifying        : fuse3-3.3.0-18.el8.x86_64                                                                                             8/18 
+  Verifying        : fuse3-libs-3.3.0-18.el8.x86_64                                                                                        9/18 
+  Verifying        : libnet-1.1.6-15.el8.x86_64                                                                                           10/18 
+  Verifying        : libslirp-4.4.0-2.module+el8.10.0+1815+5fe7415e.x86_64                                                                11/18 
+  Verifying        : podman-4:4.9.4-1.module+el8.10.0+1815+5fe7415e.x86_64                                                                12/18 
+  Verifying        : podman-catatonit-4:4.9.4-1.module+el8.10.0+1815+5fe7415e.x86_64                                                      13/18 
+  Verifying        : podman-gvproxy-4:4.9.4-1.module+el8.10.0+1815+5fe7415e.x86_64                                                        14/18 
+  Verifying        : podman-plugins-4:4.9.4-1.module+el8.10.0+1815+5fe7415e.x86_64                                                        15/18 
+  Verifying        : runc-1:1.1.12-1.module+el8.10.0+1815+5fe7415e.x86_64                                                                 16/18 
+  Verifying        : shadow-utils-subid-2:4.6-22.el8.x86_64                                                                               17/18 
+  Verifying        : slirp4netns-1.2.3-1.module+el8.10.0+1815+5fe7415e.x86_64                                                             18/18 
+
+Removed:
+  buildah-1:1.34.0-1.module+el8.10.0+1815+5fe7415e.x86_64               cockpit-podman-84.1-1.module+el8.10.0+1815+5fe7415e.noarch              
+  conmon-3:2.1.10-1.module+el8.10.0+1815+5fe7415e.x86_64                container-selinux-2:2.229.0-2.module+el8.10.0+1815+5fe7415e.noarch      
+  containers-common-2:1-81.module+el8.10.0+1815+5fe7415e.x86_64         criu-3.18-5.module+el8.10.0+1815+5fe7415e.x86_64                        
+  fuse-overlayfs-1.13-1.module+el8.10.0+1815+5fe7415e.x86_64            fuse3-3.3.0-18.el8.x86_64                                               
+  fuse3-libs-3.3.0-18.el8.x86_64                                        libnet-1.1.6-15.el8.x86_64                                              
+  libslirp-4.4.0-2.module+el8.10.0+1815+5fe7415e.x86_64                 podman-4:4.9.4-1.module+el8.10.0+1815+5fe7415e.x86_64                   
+  podman-catatonit-4:4.9.4-1.module+el8.10.0+1815+5fe7415e.x86_64       podman-gvproxy-4:4.9.4-1.module+el8.10.0+1815+5fe7415e.x86_64           
+  podman-plugins-4:4.9.4-1.module+el8.10.0+1815+5fe7415e.x86_64         runc-1:1.1.12-1.module+el8.10.0+1815+5fe7415e.x86_64                    
+  shadow-utils-subid-2:4.6-22.el8.x86_64                                slirp4netns-1.2.3-1.module+el8.10.0+1815+5fe7415e.x86_64                
+
+Complete!
+[root@minikube ~]# dnf install docker-ce docker-ce-cli containerd.io -y
+Last metadata expiration check: 0:01:19 ago on Monday 26 August 2024 10:51:39 AM IST.
+Dependencies resolved.
+================================================================================================================================================
+ Package                              Architecture      Version                                               Repository                   Size
+================================================================================================================================================
+Installing:
+ containerd.io                        x86_64            1.6.32-3.1.el8                                        docker-ce-stable             35 M
+ docker-ce                            x86_64            3:26.1.3-1.el8                                        docker-ce-stable             27 M
+ docker-ce-cli                        x86_64            1:26.1.3-1.el8                                        docker-ce-stable            7.8 M
+Installing dependencies:
+ container-selinux                    noarch            2:2.229.0-2.module+el8.10.0+1843+6892ab28             appstream                    70 k
+ fuse-overlayfs                       x86_64            1.13-1.module+el8.10.0+1843+6892ab28                  appstream                    69 k
+ fuse3                                x86_64            3.3.0-19.el8                                          baseos                       54 k
+ fuse3-libs                           x86_64            3.3.0-19.el8                                          baseos                       95 k
+ libcgroup                            x86_64            0.41-19.el8                                           baseos                       69 k
+ libslirp                             x86_64            4.4.0-2.module+el8.10.0+1843+6892ab28                 appstream                    69 k
+ slirp4netns                          x86_64            1.2.3-1.module+el8.10.0+1843+6892ab28                 appstream                    55 k
+Installing weak dependencies:
+ docker-buildx-plugin                 x86_64            0.14.0-1.el8                                          docker-ce-stable             14 M
+ docker-ce-rootless-extras            x86_64            26.1.3-1.el8                                          docker-ce-stable            5.0 M
+ docker-compose-plugin                x86_64            2.27.0-1.el8                                          docker-ce-stable             13 M
+
+Transaction Summary
+================================================================================================================================================
+Install  13 Packages
+
+Total download size: 103 M
+Installed size: 390 M
+Downloading Packages:
+(1/13): container-selinux-2.229.0-2.module+el8.10.0+1843+6892ab28.noarch.rpm                                    416 kB/s |  70 kB     00:00    
+(2/13): libslirp-4.4.0-2.module+el8.10.0+1843+6892ab28.x86_64.rpm                                               347 kB/s |  69 kB     00:00    
+(3/13): fuse-overlayfs-1.13-1.module+el8.10.0+1843+6892ab28.x86_64.rpm                                          334 kB/s |  69 kB     00:00    
+(4/13): slirp4netns-1.2.3-1.module+el8.10.0+1843+6892ab28.x86_64.rpm                                            1.0 MB/s |  55 kB     00:00    
+(5/13): fuse3-libs-3.3.0-19.el8.x86_64.rpm                                                                      659 kB/s |  95 kB     00:00    
+(6/13): fuse3-3.3.0-19.el8.x86_64.rpm                                                                           346 kB/s |  54 kB     00:00    
+(7/13): libcgroup-0.41-19.el8.x86_64.rpm                                                                        435 kB/s |  69 kB     00:00    
+(8/13): containerd.io-1.6.32-3.1.el8.x86_64.rpm                                                                  21 MB/s |  35 MB     00:01    
+(9/13): docker-buildx-plugin-0.14.0-1.el8.x86_64.rpm                                                            7.4 MB/s |  14 MB     00:01    
+(10/13): docker-ce-rootless-extras-26.1.3-1.el8.x86_64.rpm                                                       17 MB/s | 5.0 MB     00:00    
+(11/13): docker-ce-cli-26.1.3-1.el8.x86_64.rpm                                                                   15 MB/s | 7.8 MB     00:00    
+(12/13): docker-compose-plugin-2.27.0-1.el8.x86_64.rpm                                                           25 MB/s |  13 MB     00:00    
+(13/13): docker-ce-26.1.3-1.el8.x86_64.rpm                                                                      8.3 MB/s |  27 MB     00:03    
+------------------------------------------------------------------------------------------------------------------------------------------------
+Total                                                                                                            21 MB/s | 103 MB     00:04     
+Docker CE Stable - x86_64                                                                                        29 kB/s | 1.6 kB     00:00    
+Importing GPG key 0x621E9F35:
+ Userid     : "Docker Release (CE rpm) <docker@docker.com>"
+ Fingerprint: 060A 61C5 1B55 8A7F 742B 77AA C52F EB6B 621E 9F35
+ From       : https://download.docker.com/linux/centos/gpg
+Key imported successfully
+Running transaction check
+Transaction check succeeded.
+Running transaction test
+Transaction test succeeded.
+Running transaction
+  Preparing        :                                                                                                                        1/1 
+  Installing       : docker-compose-plugin-2.27.0-1.el8.x86_64                                                                             1/13 
+  Running scriptlet: docker-compose-plugin-2.27.0-1.el8.x86_64                                                                             1/13 
+  Installing       : fuse3-libs-3.3.0-19.el8.x86_64                                                                                        2/13 
+  Running scriptlet: fuse3-libs-3.3.0-19.el8.x86_64                                                                                        2/13 
+  Running scriptlet: container-selinux-2:2.229.0-2.module+el8.10.0+1843+6892ab28.noarch                                                    3/13 
+  Installing       : container-selinux-2:2.229.0-2.module+el8.10.0+1843+6892ab28.noarch                                                    3/13 
+  Running scriptlet: container-selinux-2:2.229.0-2.module+el8.10.0+1843+6892ab28.noarch                                                    3/13 
+  Installing       : containerd.io-1.6.32-3.1.el8.x86_64                                                                                   4/13 
+  Running scriptlet: containerd.io-1.6.32-3.1.el8.x86_64                                                                                   4/13 
+  Installing       : fuse3-3.3.0-19.el8.x86_64                                                                                             5/13 
+  Installing       : fuse-overlayfs-1.13-1.module+el8.10.0+1843+6892ab28.x86_64                                                            6/13 
+  Running scriptlet: fuse-overlayfs-1.13-1.module+el8.10.0+1843+6892ab28.x86_64                                                            6/13 
+  Installing       : docker-buildx-plugin-0.14.0-1.el8.x86_64                                                                              7/13 
+  Running scriptlet: docker-buildx-plugin-0.14.0-1.el8.x86_64                                                                              7/13 
+  Installing       : docker-ce-cli-1:26.1.3-1.el8.x86_64                                                                                   8/13 
+  Running scriptlet: docker-ce-cli-1:26.1.3-1.el8.x86_64                                                                                   8/13 
+  Running scriptlet: libcgroup-0.41-19.el8.x86_64                                                                                          9/13 
+  Installing       : libcgroup-0.41-19.el8.x86_64                                                                                          9/13 
+  Running scriptlet: libcgroup-0.41-19.el8.x86_64                                                                                          9/13 
+  Installing       : libslirp-4.4.0-2.module+el8.10.0+1843+6892ab28.x86_64                                                                10/13 
+  Installing       : slirp4netns-1.2.3-1.module+el8.10.0+1843+6892ab28.x86_64                                                             11/13 
+  Installing       : docker-ce-rootless-extras-26.1.3-1.el8.x86_64                                                                        12/13 
+  Running scriptlet: docker-ce-rootless-extras-26.1.3-1.el8.x86_64                                                                        12/13 
+  Installing       : docker-ce-3:26.1.3-1.el8.x86_64                                                                                      13/13 
+  Running scriptlet: docker-ce-3:26.1.3-1.el8.x86_64                                                                                      13/13 
+  Running scriptlet: container-selinux-2:2.229.0-2.module+el8.10.0+1843+6892ab28.noarch                                                   13/13 
+  Running scriptlet: docker-ce-3:26.1.3-1.el8.x86_64                                                                                      13/13 
+  Verifying        : container-selinux-2:2.229.0-2.module+el8.10.0+1843+6892ab28.noarch                                                    1/13 
+  Verifying        : fuse-overlayfs-1.13-1.module+el8.10.0+1843+6892ab28.x86_64                                                            2/13 
+  Verifying        : libslirp-4.4.0-2.module+el8.10.0+1843+6892ab28.x86_64                                                                 3/13 
+  Verifying        : slirp4netns-1.2.3-1.module+el8.10.0+1843+6892ab28.x86_64                                                              4/13 
+  Verifying        : fuse3-3.3.0-19.el8.x86_64                                                                                             5/13 
+  Verifying        : fuse3-libs-3.3.0-19.el8.x86_64                                                                                        6/13 
+  Verifying        : libcgroup-0.41-19.el8.x86_64                                                                                          7/13 
+  Verifying        : containerd.io-1.6.32-3.1.el8.x86_64                                                                                   8/13 
+  Verifying        : docker-buildx-plugin-0.14.0-1.el8.x86_64                                                                              9/13 
+  Verifying        : docker-ce-3:26.1.3-1.el8.x86_64                                                                                      10/13 
+  Verifying        : docker-ce-cli-1:26.1.3-1.el8.x86_64                                                                                  11/13 
+  Verifying        : docker-ce-rootless-extras-26.1.3-1.el8.x86_64                                                                        12/13 
+  Verifying        : docker-compose-plugin-2.27.0-1.el8.x86_64                                                                            13/13 
+
+Installed:
+  container-selinux-2:2.229.0-2.module+el8.10.0+1843+6892ab28.noarch         containerd.io-1.6.32-3.1.el8.x86_64                               
+  docker-buildx-plugin-0.14.0-1.el8.x86_64                                   docker-ce-3:26.1.3-1.el8.x86_64                                   
+  docker-ce-cli-1:26.1.3-1.el8.x86_64                                        docker-ce-rootless-extras-26.1.3-1.el8.x86_64                     
+  docker-compose-plugin-2.27.0-1.el8.x86_64                                  fuse-overlayfs-1.13-1.module+el8.10.0+1843+6892ab28.x86_64        
+  fuse3-3.3.0-19.el8.x86_64                                                  fuse3-libs-3.3.0-19.el8.x86_64                                    
+  libcgroup-0.41-19.el8.x86_64                                               libslirp-4.4.0-2.module+el8.10.0+1843+6892ab28.x86_64             
+  slirp4netns-1.2.3-1.module+el8.10.0+1843+6892ab28.x86_64                  
+
+Complete!
+[root@minikube ~]# systemctl status docker
+● docker.service - Docker Application Container Engine
+   Loaded: loaded (/usr/lib/systemd/system/docker.service; disabled; vendor preset: disabled)
+   Active: inactive (dead)
+     Docs: https://docs.docker.com
+[root@minikube ~]# systemctl enable --now docker
+Created symlink /etc/systemd/system/multi-user.target.wants/docker.service → /usr/lib/systemd/system/docker.service.
+[root@minikube ~]# systemctl status docker
+● docker.service - Docker Application Container Engine
+   Loaded: loaded (/usr/lib/systemd/system/docker.service; enabled; vendor preset: disabled)
+   Active: active (running) since Mon 2024-08-26 10:57:14 IST; 1s ago
+     Docs: https://docs.docker.com
+ Main PID: 47325 (dockerd)
+    Tasks: 8
+   Memory: 31.7M
+   CGroup: /system.slice/docker.service
+           └─47325 /usr/bin/dockerd -H fd:// --containerd=/run/containerd/containerd.sock
+
+Aug 26 10:57:12 minikube.example.com systemd[1]: Starting Docker Application Container Engine...
+Aug 26 10:57:12 minikube.example.com dockerd[47325]: time="2024-08-26T10:57:12.253649170+05:30" level=info msg="Starting up"
+Aug 26 10:57:12 minikube.example.com dockerd[47325]: time="2024-08-26T10:57:12.327541820+05:30" level=info msg="Loading containers: start."
+Aug 26 10:57:14 minikube.example.com dockerd[47325]: time="2024-08-26T10:57:14.414406383+05:30" level=info msg="Firewalld: interface docker0 al>
+Aug 26 10:57:14 minikube.example.com dockerd[47325]: time="2024-08-26T10:57:14.746869685+05:30" level=info msg="Loading containers: done."
+Aug 26 10:57:14 minikube.example.com dockerd[47325]: time="2024-08-26T10:57:14.808988680+05:30" level=info msg="Docker daemon" commit=8e96db1 c>
+Aug 26 10:57:14 minikube.example.com dockerd[47325]: time="2024-08-26T10:57:14.809856861+05:30" level=info msg="Daemon has completed initializa>
+Aug 26 10:57:14 minikube.example.com dockerd[47325]: time="2024-08-26T10:57:14.879190516+05:30" level=info msg="API listen on /run/docker.sock"
+Aug 26 10:57:14 minikube.example.com systemd[1]: Started Docker Application Container Engine.
+[root@minikube ~]# usermod -aG docker $USER
+[root@minikube ~]# 
+[root@minikube ~]# newgrp docker
+[root@minikube ~]# 
+[root@minikube ~]# curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+100   138  100   138    0     0    442      0 --:--:-- --:--:-- --:--:--   443
+100 53.7M  100 53.7M    0     0  26.6M      0  0:00:02  0:00:02 --:--:-- 36.7M
+[root@minikube ~]# cp kubectl /usr/local/bin/ && sudo chmod +x /usr/local/bin/kubectl
+[root@minikube ~]# kubectl version --client
+Client Version: v1.31.0
+Kustomize Version: v5.4.2
+[root@minikube ~]# 
+[root@minikube ~]# curl -LO https://storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+100 91.1M  100 91.1M    0     0  13.5M      0  0:00:06  0:00:06 --:--:-- 19.2M
+[root@minikube ~]# 
+[root@minikube ~]# sudo install minikube-linux-amd64 /usr/local/bin/minikube
+[root@minikube ~]# 
+[root@minikube ~]# minikube start --driver docker  --force
+😄  minikube v1.33.1 on Rocky 8.10
+❗  minikube skips various validations when --force is supplied; this may lead to unexpected behavior
+✨  Using the docker driver based on user configuration
+🛑  The "docker" driver should not be used with root privileges. If you wish to continue as root, use --force.
+💡  If you are running minikube within a VM, consider using --driver=none:
+📘    https://minikube.sigs.k8s.io/docs/reference/drivers/none/
+📌  Using Docker driver with root privileges
+👍  Starting "minikube" primary control-plane node in "minikube" cluster
+🚜  Pulling base image v0.0.44 ...
+💾  Downloading Kubernetes v1.30.0 preload ...
+    > preloaded-images-k8s-v18-v1...:  342.90 MiB / 342.90 MiB  100.00% 17.44 M
+    > gcr.io/k8s-minikube/kicbase...:  481.58 MiB / 481.58 MiB  100.00% 17.11 M
+🔥  Creating docker container (CPUs=2, Memory=2200MB) ...
+🐳  Preparing Kubernetes v1.30.0 on Docker 26.1.1 ...
+    ▪ Generating certificates and keys ...
+    ▪ Booting up control plane ...
+    ▪ Configuring RBAC rules ...
+🔗  Configuring bridge CNI (Container Networking Interface) ...
+🔎  Verifying Kubernetes components...
+    ▪ Using image gcr.io/k8s-minikube/storage-provisioner:v5
+🌟  Enabled addons: storage-provisioner, default-storageclass
+🏄  Done! kubectl is now configured to use "minikube" cluster and "default" namespace by default
+[root@minikube ~]# 
+[root@minikube ~]# minikube status
+minikube
+type: Control Plane
+host: Running
+kubelet: Running
+apiserver: Running
+kubeconfig: Configured
+
+[root@minikube ~]# kubectl cluster-info
+Kubernetes control plane is running at https://192.168.49.2:8443
+CoreDNS is running at https://192.168.49.2:8443/api/v1/namespaces/kube-system/services/kube-dns:dns/proxy
+
+To further debug and diagnose cluster problems, use 'kubectl cluster-info dump'.
+[root@minikube ~]# kubectl get nodes
+NAME       STATUS   ROLES           AGE   VERSION
+minikube   Ready    control-plane   74s   v1.30.0
+[root@minikube ~]# 
+[root@minikube ~]# kubectl create deployment test-minikube --image=k8s.gcr.io/echoserver:1.10 
+deployment.apps/test-minikube created
+[root@minikube ~]# kubectl get pod
+NAME                             READY   STATUS              RESTARTS   AGE
+test-minikube-68d779c5dd-8vrvj   0/1     ContainerCreating   0          6s
+[root@minikube ~]# kubectl get pod
+NAME                             READY   STATUS    RESTARTS   AGE
+test-minikube-68d779c5dd-8vrvj   1/1     Running   0          20s
+[root@minikube ~]# kubectl get deploy
+NAME            READY   UP-TO-DATE   AVAILABLE   AGE
+test-minikube   1/1     1            1           24s
