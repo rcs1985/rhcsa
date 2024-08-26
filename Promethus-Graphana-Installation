@@ -1,0 +1,287 @@
+[root@minikube linux-amd64]# helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
+"prometheus-community" has been added to your repositories
+[root@minikube linux-amd64]# help repo
+-bash: help: no help topics match `repo'.  Try `help help' or `man -k repo' or `info repo'.
+[root@minikube linux-amd64]# 
+[root@minikube linux-amd64]# helm repo add bitnami https://charts.bitnami.com/bitnami
+"bitnami" has been added to your repositories
+[root@minikube linux-amd64]# help repo list
+-bash: help: no help topics match `list'.  Try `help help' or `man -k list' or `info list'.
+[root@minikube linux-amd64]# 
+[root@minikube linux-amd64]# helm repo
+
+This command consists of multiple subcommands to interact with chart repositories.
+
+It can be used to add, remove, list, and index chart repositories.
+
+Usage:
+  helm repo [command]
+
+Available Commands:
+  add         add a chart repository
+  index       generate an index file given a directory containing packaged charts
+  list        list chart repositories
+  remove      remove one or more chart repositories
+  update      update information of available charts locally from chart repositories
+
+Flags:
+  -h, --help   help for repo
+
+Global Flags:
+      --burst-limit int                 client-side default throttling limit (default 100)
+      --debug                           enable verbose output
+      --kube-apiserver string           the address and the port for the Kubernetes API server
+      --kube-as-group stringArray       group to impersonate for the operation, this flag can be repeated to specify multiple groups.
+      --kube-as-user string             username to impersonate for the operation
+      --kube-ca-file string             the certificate authority file for the Kubernetes API server connection
+      --kube-context string             name of the kubeconfig context to use
+      --kube-insecure-skip-tls-verify   if true, the Kubernetes API server's certificate will not be checked for validity. This will make your HTTPS connections insecure
+      --kube-tls-server-name string     server name to use for Kubernetes API server certificate validation. If it is not provided, the hostname used to contact the server is used
+      --kube-token string               bearer token used for authentication
+      --kubeconfig string               path to the kubeconfig file
+  -n, --namespace string                namespace scope for this request
+      --qps float32                     queries per second used when communicating with the Kubernetes API, not including bursting
+      --registry-config string          path to the registry config file (default "/root/.config/helm/registry/config.json")
+      --repository-cache string         path to the file containing cached repository indexes (default "/root/.cache/helm/repository")
+      --repository-config string        path to the file containing repository names and URLs (default "/root/.config/helm/repositories.yaml")
+
+Use "helm repo [command] --help" for more information about a command.
+[root@minikube linux-amd64]# 
+[root@minikube linux-amd64]# helm repo list
+NAME                	URL                                               
+prometheus-community	https://prometheus-community.github.io/helm-charts
+bitnami             	https://charts.bitnami.com/bitnami                
+[root@minikube linux-amd64]# 
+[root@minikube linux-amd64]# 
+[root@minikube linux-amd64]# helm repo update
+Hang tight while we grab the latest from your chart repositories...
+...Successfully got an update from the "prometheus-community" chart repository
+...Successfully got an update from the "bitnami" chart repository
+Update Complete. ⎈Happy Helming!⎈
+[root@minikube linux-amd64]# 
+[root@minikube linux-amd64]# helm install prometheus prometheus-community/prometheus
+NAME: prometheus
+LAST DEPLOYED: Mon Aug 26 12:15:02 2024
+NAMESPACE: default
+STATUS: deployed
+REVISION: 1
+TEST SUITE: None
+NOTES:
+The Prometheus server can be accessed via port 80 on the following DNS name from within your cluster:
+prometheus-server.default.svc.cluster.local
+
+
+Get the Prometheus server URL by running these commands in the same shell:
+  export POD_NAME=$(kubectl get pods --namespace default -l "app.kubernetes.io/name=prometheus,app.kubernetes.io/instance=prometheus" -o jsonpath="{.items[0].metadata.name}")
+  kubectl --namespace default port-forward $POD_NAME 9090
+
+
+The Prometheus alertmanager can be accessed via port 9093 on the following DNS name from within your cluster:
+prometheus-alertmanager.default.svc.cluster.local
+
+
+Get the Alertmanager URL by running these commands in the same shell:
+  export POD_NAME=$(kubectl get pods --namespace default -l "app.kubernetes.io/name=alertmanager,app.kubernetes.io/instance=prometheus" -o jsonpath="{.items[0].metadata.name}")
+  kubectl --namespace default port-forward $POD_NAME 9093
+#################################################################################
+######   WARNING: Pod Security Policy has been disabled by default since    #####
+######            it deprecated after k8s 1.25+. use                        #####
+######            (index .Values "prometheus-node-exporter" "rbac"          #####
+###### .          "pspEnabled") with (index .Values                         #####
+######            "prometheus-node-exporter" "rbac" "pspAnnotations")       #####
+######            in case you still need it.                                #####
+#################################################################################
+
+
+The Prometheus PushGateway can be accessed via port 9091 on the following DNS name from within your cluster:
+prometheus-prometheus-pushgateway.default.svc.cluster.local
+
+
+Get the PushGateway URL by running these commands in the same shell:
+  export POD_NAME=$(kubectl get pods --namespace default -l "app=prometheus-pushgateway,component=pushgateway" -o jsonpath="{.items[0].metadata.name}")
+  kubectl --namespace default port-forward $POD_NAME 9091
+
+For more information on running Prometheus, visit:
+https://prometheus.io/
+[root@minikube linux-amd64]# 
+[root@minikube linux-amd64]# kubectl get all
+NAME                                                    READY   STATUS              RESTARTS   AGE
+pod/prometheus-alertmanager-0                           0/1     ContainerCreating   0          21s
+pod/prometheus-kube-state-metrics-74cdb59bff-vmbtx      0/1     Running             0          21s
+pod/prometheus-prometheus-node-exporter-zzdph           1/1     Running             0          22s
+pod/prometheus-prometheus-pushgateway-66fc55f8d-lkrxj   0/1     ContainerCreating   0          21s
+pod/prometheus-server-5b95c444dc-2cmx4                  0/2     ContainerCreating   0          21s
+pod/test-minikube-68d779c5dd-8vrvj                      1/1     Running             0          73m
+
+NAME                                          TYPE        CLUSTER-IP       EXTERNAL-IP   PORT(S)    AGE
+service/kubernetes                            ClusterIP   10.96.0.1        <none>        443/TCP    74m
+service/prometheus-alertmanager               ClusterIP   10.106.154.175   <none>        9093/TCP   22s
+service/prometheus-alertmanager-headless      ClusterIP   None             <none>        9093/TCP   22s
+service/prometheus-kube-state-metrics         ClusterIP   10.105.106.82    <none>        8080/TCP   22s
+service/prometheus-prometheus-node-exporter   ClusterIP   10.108.151.138   <none>        9100/TCP   22s
+service/prometheus-prometheus-pushgateway     ClusterIP   10.96.126.190    <none>        9091/TCP   22s
+service/prometheus-server                     ClusterIP   10.101.24.182    <none>        80/TCP     22s
+
+NAME                                                 DESIRED   CURRENT   READY   UP-TO-DATE   AVAILABLE   NODE SELECTOR            AGE
+daemonset.apps/prometheus-prometheus-node-exporter   1         1         1       1            1           kubernetes.io/os=linux   22s
+
+NAME                                                READY   UP-TO-DATE   AVAILABLE   AGE
+deployment.apps/prometheus-kube-state-metrics       0/1     1            0           22s
+deployment.apps/prometheus-prometheus-pushgateway   0/1     1            0           22s
+deployment.apps/prometheus-server                   0/1     1            0           22s
+deployment.apps/test-minikube                       1/1     1            1           73m
+
+NAME                                                          DESIRED   CURRENT   READY   AGE
+replicaset.apps/prometheus-kube-state-metrics-74cdb59bff      1         1         0       22s
+replicaset.apps/prometheus-prometheus-pushgateway-66fc55f8d   1         1         0       22s
+replicaset.apps/prometheus-server-5b95c444dc                  1         1         0       22s
+replicaset.apps/test-minikube-68d779c5dd                      1         1         1       73m
+
+NAME                                       READY   AGE
+statefulset.apps/prometheus-alertmanager   0/1     22s
+[root@minikube linux-amd64]# 
+[root@minikube linux-amd64]# kubectl get pod
+NAME                                                READY   STATUS              RESTARTS   AGE
+prometheus-alertmanager-0                           0/1     ContainerCreating   0          24s
+prometheus-kube-state-metrics-74cdb59bff-vmbtx      0/1     Running             0          24s
+prometheus-prometheus-node-exporter-zzdph           1/1     Running             0          25s
+prometheus-prometheus-pushgateway-66fc55f8d-lkrxj   0/1     ContainerCreating   0          24s
+prometheus-server-5b95c444dc-2cmx4                  0/2     ContainerCreating   0          24s
+test-minikube-68d779c5dd-8vrvj                      1/1     Running             0          73m
+[root@minikube linux-amd64]# kubectl get node
+NAME       STATUS   ROLES           AGE   VERSION
+minikube   Ready    control-plane   74m   v1.30.0
+[root@minikube linux-amd64]# kubectl get pv
+NAME                                       CAPACITY   ACCESS MODES   RECLAIM POLICY   STATUS   CLAIM                                       STORAGECLASS   VOLUMEATTRIBUTESCLASS   REASON   AGE
+pvc-1513f0a6-c67d-4901-a48e-379a0e325f98   8Gi        RWO            Delete           Bound    default/prometheus-server                   standard       <unset>                          44s
+pvc-f8094b27-a15e-4def-8ad8-e64d313aa295   2Gi        RWO            Delete           Bound    default/storage-prometheus-alertmanager-0   standard       <unset>                          43s
+[root@minikube linux-amd64]# kubectl get pvc
+NAME                                STATUS   VOLUME                                     CAPACITY   ACCESS MODES   STORAGECLASS   VOLUMEATTRIBUTESCLASS   AGE
+prometheus-server                   Bound    pvc-1513f0a6-c67d-4901-a48e-379a0e325f98   8Gi        RWO            standard       <unset>                 47s
+storage-prometheus-alertmanager-0   Bound    pvc-f8094b27-a15e-4def-8ad8-e64d313aa295   2Gi        RWO            standard       <unset>                 47s
+[root@minikube linux-amd64]# 
+[root@minikube linux-amd64]# kubectl expose service prometheus-server --type=NodePort --target-port=9090 --name=prometheus-server-ext
+service/prometheus-server-ext exposed
+[root@minikube linux-amd64]# kubectl get svc
+NAME                                  TYPE        CLUSTER-IP       EXTERNAL-IP   PORT(S)        AGE
+kubernetes                            ClusterIP   10.96.0.1        <none>        443/TCP        75m
+prometheus-alertmanager               ClusterIP   10.106.154.175   <none>        9093/TCP       74s
+prometheus-alertmanager-headless      ClusterIP   None             <none>        9093/TCP       74s
+prometheus-kube-state-metrics         ClusterIP   10.105.106.82    <none>        8080/TCP       74s
+prometheus-prometheus-node-exporter   ClusterIP   10.108.151.138   <none>        9100/TCP       74s
+prometheus-prometheus-pushgateway     ClusterIP   10.96.126.190    <none>        9091/TCP       74s
+prometheus-server                     ClusterIP   10.101.24.182    <none>        80/TCP         74s
+prometheus-server-ext                 NodePort    10.108.44.88     <none>        80:32646/TCP   5s
+[root@minikube linux-amd64]# minikube ip
+192.168.49.2
+
+[root@minikube linux-amd64]# 
+[root@minikube linux-amd64]# helm repo add grafana https://grafana.github.io/helm-charts
+"grafana" has been added to your repositories
+[root@minikube linux-amd64]# helm repo list
+NAME                	URL                                               
+prometheus-community	https://prometheus-community.github.io/helm-charts
+bitnami             	https://charts.bitnami.com/bitnami                
+grafana             	https://grafana.github.io/helm-charts             
+[root@minikube linux-amd64]# 
+[root@minikube linux-amd64]# helm install grafana grafana/grafana
+NAME: grafana
+LAST DEPLOYED: Mon Aug 26 13:02:32 2024
+NAMESPACE: default
+STATUS: deployed
+REVISION: 1
+NOTES:
+1. Get your 'admin' user password by running:
+
+   kubectl get secret --namespace default grafana -o jsonpath="{.data.admin-password}" | base64 --decode ; echo
+
+
+2. The Grafana server can be accessed via port 80 on the following DNS name from within your cluster:
+
+   grafana.default.svc.cluster.local
+
+   Get the Grafana URL to visit by running these commands in the same shell:
+     export POD_NAME=$(kubectl get pods --namespace default -l "app.kubernetes.io/name=grafana,app.kubernetes.io/instance=grafana" -o jsonpath="{.items[0].metadata.name}")
+     kubectl --namespace default port-forward $POD_NAME 3000
+
+3. Login with the password from step 1 and the username: admin
+#################################################################################
+######   WARNING: Persistence is disabled!!! You will lose your data when   #####
+######            the Grafana pod is terminated.                            #####
+#################################################################################
+[root@minikube linux-amd64]# 
+[root@minikube linux-amd64]# kubectl get secret --namespace default grafana -o jsonpath="{.data.admin-password}" | base64 --decode ; echo 
+r6fyFHlAndkj4ZOcfh4sJXuyBh7m2OCUHQCqhnY5
+[root@minikube linux-amd64]# cat >graphana-password
+r6fyFHlAndkj4ZOcfh4sJXuyBh7m2OCUHQCqhnY5
+
+^C
+[root@minikube linux-amd64]# ls -lart
+total 51240
+-rwxr-xr-x. 1 1001 docker 52445336 Aug 14 20:10 helm
+-rw-r--r--. 1 1001 docker     3483 Aug 14 20:16 README.md
+-rw-r--r--. 1 1001 docker    11373 Aug 14 20:16 LICENSE
+drwxr-xr-x. 3 root root         64 Aug 26 11:30 ..
+drwxr-xr-x. 2 1001 docker       75 Aug 26 13:02 .
+-rw-r--r--. 1 root root         42 Aug 26 13:03 graphana-password
+[root@minikube linux-amd64]# cat graphana-password 
+r6fyFHlAndkj4ZOcfh4sJXuyBh7m2OCUHQCqhnY5
+
+[root@minikube linux-amd64]# 
+[root@minikube linux-amd64]# kubectl expose service grafana --type=NodePort --target-port=3000 --name=grafana-ext
+service/grafana-ext exposed
+[root@minikube linux-amd64]# kubectl get svc
+NAME                                  TYPE        CLUSTER-IP       EXTERNAL-IP   PORT(S)        AGE
+grafana                               ClusterIP   10.96.122.207    <none>        80/TCP         73s
+grafana-ext                           NodePort    10.97.154.37     <none>        80:30858/TCP   5s
+kubernetes                            ClusterIP   10.96.0.1        <none>        443/TCP        122m
+prometheus-alertmanager               ClusterIP   10.106.154.175   <none>        9093/TCP       48m
+prometheus-alertmanager-headless      ClusterIP   None             <none>        9093/TCP       48m
+prometheus-kube-state-metrics         ClusterIP   10.105.106.82    <none>        8080/TCP       48m
+prometheus-prometheus-node-exporter   ClusterIP   10.108.151.138   <none>        9100/TCP       48m
+prometheus-prometheus-pushgateway     ClusterIP   10.96.126.190    <none>        9091/TCP       48m
+prometheus-server                     ClusterIP   10.101.24.182    <none>        80/TCP         48m
+prometheus-server-ext                 NodePort    10.108.44.88     <none>        80:32646/TCP   47m
+[root@minikube linux-amd64]# helm repo add bitnami https://charts.bitnami.com/bitnami^C
+[root@minikube linux-amd64]# 
+[root@minikube linux-amd64]# 
+[root@minikube linux-amd64]# kubectl get svc | grep -i grafana-ext|awk '{print $5}'
+80:30858/TCP
+[root@minikube linux-amd64]# kubectl get svc | grep -i grafana-ext|awk '{print $5}'^C
+[root@minikube linux-amd64]# minikube ip
+192.168.49.2
+[root@minikube linux-amd64]# 
+[root@minikube linux-amd64]# ls -lrt
+total 51240
+-rwxr-xr-x. 1 1001 docker 52445336 Aug 14 20:10 helm
+-rw-r--r--. 1 1001 docker     3483 Aug 14 20:16 README.md
+-rw-r--r--. 1 1001 docker    11373 Aug 14 20:16 LICENSE
+-rw-r--r--. 1 root root         42 Aug 26 13:03 graphana-password
+[root@minikube linux-amd64]# pwd
+/root/Downloads/linux-amd64
+[root@minikube linux-amd64]# 
+[root@minikube linux-amd64]# 
+[root@minikube linux-amd64]# vi ui-details
+[root@minikube linux-amd64]# ls -lrt
+total 51244
+-rwxr-xr-x. 1 1001 docker 52445336 Aug 14 20:10 helm
+-rw-r--r--. 1 1001 docker     3483 Aug 14 20:16 README.md
+-rw-r--r--. 1 1001 docker    11373 Aug 14 20:16 LICENSE
+-rw-r--r--. 1 root root         42 Aug 26 13:03 graphana-password
+-rw-r--r--. 1 root root         80 Aug 26 13:13 ui-details
+[root@minikube linux-amd64]# cat ui-details
+promethus link http://192.168.49.2:32646
+grafana link http://192.168.49.2:30858
+[root@minikube linux-amd64]# cat graphana-password
+r6fyFHlAndkj4ZOcfh4sJXuyBh7m2OCUHQCqhnY5
+
+Then go to browser and run grafana ip http://192.168.49.2:30858 user is admin and password is grafana password 
+Goto "Data Source" - click and see the options.  Normally have multiple data sources.  Select Prometheus 
+Where in "Prometheus server URL" section, enter the http://IPAddress:Port - which you have entered to create prometheus UI 
+select Save and Test
+
+Come back and see the "create first dashboard" - click --> just see the options.
+But, click left side 4squares option  -> select -> Dashboard -> select "Create Dashboard"  -> then select "import dashboard" ->  
+
+enter "3662" (this is ID number where pre-created template is available) -> as you click on the "Load" button, you can see prometheus is loaded. ...
+Also on the bottom select "prometheus" on the prometheus tab...then click "Import"
