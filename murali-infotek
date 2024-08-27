@@ -1075,17 +1075,178 @@ PreferrableSchedule:  Worst case it will allow to deploy the pod.
 
 Check with multiple options --- check for recordings 
 
+==============
 
 
+26Aug24:
+    
+    Node Maintenance - Cordon/Drain Activity:
+
+[root@master ~]# kubectl get pods -o wide
+NAME                          READY   STATUS    RESTARTS   AGE   IP             NODE                NOMINATED NODE   READINESS GATES
+resdeploy2-744758457d-79vjl   1/1     Running   0          16h   192.168.0.13   node1.example.com   <none>           <none>
+resdeploy2-744758457d-nqd8r   1/1     Running   0          31s   192.168.0.3    node2.example.com   <none>           <none>
+resdeploy2-744758457d-p22mz   1/1     Running   0          16h   192.168.0.4    node1.example.com   <none>           <none>
+resdeploy2-744758457d-pxm26   1/1     Running   0          19s   192.168.0.4    node2.example.com   <none>           <none>
+[root@master ~]# kubectl get nodes
+NAME                 STATUS   ROLES           AGE     VERSION
+master.example.com   Ready    control-plane   9d      v1.29.8
+node1.example.com    Ready    <none>          9d      v1.29.8
+node2.example.com    Ready    <none>          5d11h   v1.29.8
+[root@master ~]# kubectl cordon node2.example.com
+node/node2.example.com cordoned
+
+[root@master ~]# kubectl get nodes
+NAME                 STATUS                     ROLES           AGE     VERSION
+master.example.com   Ready                      control-plane   9d      v1.29.8
+node1.example.com    Ready                      <none>          9d      v1.29.8
+node2.example.com    Ready,SchedulingDisabled   <none>          5d11h   v1.29.8
+[root@master ~]# kubectl get pods -o wide
+[root@master ~]# kubectl get pods -o wide
+NAME                          READY   STATUS    RESTARTS   AGE     IP             NODE                NOMINATED NODE   READINESS GATES
+resdeploy2-744758457d-79vjl   1/1     Running   0          16h     192.168.0.13   node1.example.com   <none>           <none>
+resdeploy2-744758457d-nqd8r   1/1     Running   0          8m16s   192.168.0.3    node2.example.com   <none>           <none>
+resdeploy2-744758457d-p22mz   1/1     Running   0          16h     192.168.0.4    node1.example.com   <none>           <none>
+resdeploy2-744758457d-pxm26   1/1     Running   0          8m4s    192.168.0.4    node2.example.com   <none>           <none>
+[root@master ~]# kubectl scale --replicas=6 deploy resdeploy
+error: no objects passed to scale
+[root@master ~]# kubectl scale --replicas=6 deploy resdeploy2
+deployment.apps/resdeploy2 scaled
+[root@master ~]# kubectl get pods -o wide
 
 
+[root@master ~]# kubectl get pods -o wide
+NAME                          READY   STATUS              RESTARTS   AGE     IP             NODE                NOMINATED NODE   READINESS GATES
+resdeploy2-744758457d-79vjl   1/1     Running             0          16h     192.168.0.13   node1.example.com   <none>           <none>
+resdeploy2-744758457d-kzppd   0/1     ContainerCreating   0          4s      <none>         node1.example.com   <none>           <none>
+resdeploy2-744758457d-nqd8r   1/1     Running             0          8m49s   192.168.0.3    node2.example.com   <none>           <none>
+resdeploy2-744758457d-p22mz   1/1     Running             0          16h     192.168.0.4    node1.example.com   <none>           <none>
+resdeploy2-744758457d-pxm26   1/1     Running             0          8m37s   192.168.0.4    node2.example.com   <none>           <none>
+resdeploy2-744758457d-tgms5   0/1     ContainerCreating   0          3s      <none>         node1.example.com   <none>           <none>
+[root@master ~]# kubectl get pods -o wide
 
 
+[root@master ~]# kubectl get pods -o wide
+NAME                          READY   STATUS    RESTARTS   AGE     IP             NODE                NOMINATED NODE   READINESS GATES
+resdeploy2-744758457d-79vjl   1/1     Running   0          16h     192.168.0.13   node1.example.com   <none>           <none>
+resdeploy2-744758457d-kzppd   1/1     Running   0          17s     192.168.0.14   node1.example.com   <none>           <none>
+resdeploy2-744758457d-nqd8r   1/1     Running   0          9m2s    192.168.0.3    node2.example.com   <none>           <none>
+resdeploy2-744758457d-p22mz   1/1     Running   0          16h     192.168.0.4    node1.example.com   <none>           <none>
+resdeploy2-744758457d-pxm26   1/1     Running   0          8m50s   192.168.0.4    node2.example.com   <none>           <none>
+resdeploy2-744758457d-tgms5   1/1     Running   0          16s     192.168.0.15   node1.example.com   <none>           <none>
+[root@master ~]# kubectl get nodes
+NAME                 STATUS                     ROLES           AGE     VERSION
+master.example.com   Ready                      control-plane   9d      v1.29.8
+node1.example.com    Ready                      <none>          9d      v1.29.8
+node2.example.com    Ready,SchedulingDisabled   <none>          5d11h   v1.29.8
+[root@master ~]# kubectl drain node node2.example.com
+Error from server (NotFound): nodes "node" not found
+[root@master ~]# kubectl drain node2.example.com
+[root@master ~]# kubectl drain node2.example.com
+node/node2.example.com already cordoned
+error: unable to drain node "node2.example.com" due to error:cannot delete DaemonSet-managed Pods (use --ignore-daemonsets to ignore): kube-flannel/kube-flannel-ds-kxpm4, kube-system/fluentd-elasticsearch-mdldz, kube-system/kube-proxy-28bgv, per/prometheus-prometheus-node-exporter-fpdz9, continuing command...
+There are pending nodes to be drained:
+ node2.example.com
+cannot delete DaemonSet-managed Pods (use --ignore-daemonsets to ignore): kube-flannel/kube-flannel-ds-kxpm4, kube-system/fluentd-elasticsearch-mdldz, kube-system/kube-proxy-28bgv, per/prometheus-prometheus-node-exporter-fpdz9
+[root@master ~]# kubectl drain node2.example.com --ignore-daemonsets
+
+[root@master ~]# kubectl drain node2.example.com --ignore-daemonsets
+node/node2.example.com already cordoned
+Warning: ignoring DaemonSet-managed Pods: kube-flannel/kube-flannel-ds-kxpm4, kube-system/fluentd-elasticsearch-mdldz, kube-system/kube-proxy-28bgv, per/prometheus-prometheus-node-exporter-fpdz9
+evicting pod classwork/resdeploy2-744758457d-pxm26
+evicting pod classwork/resdeploy2-744758457d-nqd8r
+pod/resdeploy2-744758457d-nqd8r evicted
+pod/resdeploy2-744758457d-pxm26 evicted
+node/node2.example.com drained
+[root@master ~]# kubectl get nodes
+NAME                 STATUS                     ROLES           AGE     VERSION
+master.example.com   Ready                      control-plane   9d      v1.29.8
+node1.example.com    Ready                      <none>          9d      v1.29.8
+node2.example.com    Ready,SchedulingDisabled   <none>          5d11h   v1.29.8
+[root@master ~]# kubectl get pods -o wide
+NAME                          READY   STATUS    RESTARTS   AGE    IP             NODE                NOMINATED NODE   READINESS GATES
+resdeploy2-744758457d-4msg9   1/1     Running   0          28s    192.168.0.16   node1.example.com   <none>           <none>
+resdeploy2-744758457d-79vjl   1/1     Running   0          16h    192.168.0.13   node1.example.com   <none>           <none>
+resdeploy2-744758457d-kzppd   1/1     Running   0          2m1s   192.168.0.14   node1.example.com   <none>           <none>
+resdeploy2-744758457d-mg2k2   1/1     Running   0          28s    192.168.0.17   node1.example.com   <none>           <none>
+resdeploy2-744758457d-p22mz   1/1     Running   0          16h    192.168.0.4    node1.example.com   <none>           <none>
+resdeploy2-744758457d-tgms5   1/1     Running   0          2m     192.168.0.15   node1.example.com   <none>           <none>
+[root@master ~]# 
+
+    
+    ===================
+    
+===========================================================================
+Execute the below command in the new node.   
+#hostnamectl set-hostname  minikube.example.com
+#hostnamectl 
 
 
+Minikube Install:
+    
+# dnf config-manager --add-repo=https://download.docker.com/linux/centos/docker-ce.repo
+If you get any error says not able to resolv... then check your /etc/resolv.conf
+
+#vim /etc/resolv.conf
+search example.com
+nameserver  8.8.8.8
+-----save----
+
+# dnf repolist
+# dnf install docker-ce docker-ce-cli containerd.io -y
+It throws some conflict issue.....
+Known issue: 
+#yum remove -y runc*  --> to remove runc* packages
+ 
+ # dnf install docker-ce docker-ce-cli containerd.io -y
+ 
+# systemctl enable docker
+# systemctl start docker
+# usermod -aG docker $USER
+# newgrp docker
+# curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
+# cp kubectl /usr/local/bin/ && sudo chmod +x /usr/local/bin/kubectl
+# kubectl version --client
+# curl -LO https://storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64
+# sudo install minikube-linux-amd64 /usr/local/bin/minikube
+# minikube start --driver docker  --force
+#minikube status
+#kubectl cluster-info
+# kubectl get nodes
+
+# kubectl create deployment test-minikube --image=k8s.gcr.io/echoserver:1.10 
+deployment.apps/test-minikube created
+#
+==========================================================================
+Helm Charts Install:
+   ======================================================== 
+    https://helm.sh/docs/intro/install/
+    Download and use the binary as per the above link
+    #cd /root/Downloads
+    #ls 
+    helm.3.15......tar.gz
+    #tar xvfz  helm-3.15.......tar.gz
+    #cd linux-amd64
+    #cp helm /usr/local/bin
+    #helm
+    ...======================================================
+    
+      $helm search repo bitnami
+  $helm repo add bitnami https://charts.bitnami.com/bitnami
 
 
-=====
+     $ helm repo update              
+
+     
+
+     $ helm list
+
+ ==========================================No need to do the below excercise - only FYI =====
+Installing Prometheus and followed by Grafanna:
+
+What is prometheus?
+https://prometheus.io/docs/introduction/overview/
+
 Helm Charts:
     
     https://helm.sh/docs/intro/install/
@@ -1103,4 +1264,242 @@ Helm Charts:
 
        $ helm list
 
- ======
+
+
+Helm Charts:
+    
+    https://helm.sh/docs/intro/install/
+    
+      $helm search repo bitnami
+  $helm repo add bitnami https://charts.bitnami.com/bitnami
+
+
+     $ helm repo update              
+
+     
+
+       $ helm list
+
+
+
+=========================================Start Excercise from below=============================
+Installing Prometheus:
+    # helm repo add bitnami https://charts.bitnami.com/bitnami
+    # helm repo list
+    # helm search repo bitnami
+Add helm repo
+helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
+
+Update helm repo
+helm repo update
+
+Install helm
+helm install prometheus prometheus-community/prometheus
+
+kubectl get pod
+kubectl get all
+kubectl get pv
+kubectl get pvc
+
+Expose Prometheus Service
+This is required to access prometheus-server using your browser.
+
+#kubectl expose service prometheus-server --type=NodePort --target-port=9090 --name=prometheus-server-ext
+#kubectl get svc
+
+Using "minikube ip" and get the ip address and add the port using above "kubectl get svc" command 
+Now prometheus UI will be opened
+----==========================================================End=========================
+Installing Grafanna using Helm Charts:
+    
+Add helm repo
+helm repo add grafana https://grafana.github.io/helm-charts
+
+Update helm repo
+helm repo update
+
+Install helm
+helm install grafana grafana/grafana
+
+Once instllation is completed, you need to execute the below command: to get the password for the admin user:
+    
+    #kubectl get secret --namespace default grafana -o jsonpath="{.data.admin-password}" | base64 --decode ; echo 
+    
+Expose Grafana Service
+#kubectl expose service grafana --type=NodePort --target-port=3000 --name=grafana-ext
+#kubectl get svc
+
+With "minikube ip " along with the port number (take it from "kubectl get svc"), using browser, get the UI
+
+using "admin" user and with the password, login.
+Goto "Data Source" - click and see the options.  Normally have multiple data sources.  Select Prometheus 
+Where in "Prometheus server URL" section, enter the http://IPAddress:Port - which you have entered to create prometheus UI 
+select Save and Test
+
+Come back and see the "create first dashboard" - click --> just see the options.
+But, click left side 4squares option  -> select -> Dashboard -> select "Create Dashboard"  -> then select "import dashboard" ->  
+
+enter "3662" (this is ID number where pre-created template is available) -> as you click on the "Load" button, you can see prometheus is loaded. ...
+Also on the bottom select "prometheus" on the prometheus tab...then click "Import"
+
+Now you can able to see the Dashboards...
+
+======================================================Below Not to work - just FYI ==========
+prometheus-kube-state-metrics:
+
+#kubectl get svc
+..
+kube-state-metrics...........................
+
+#kubectl expose service prometheus-kube-state-metrics --type=NodePort --target-port=8080 --name=prometheus-kube-state-metrics-ext 
+#kubectl get svc 
+---
+prometheus-kube-state-metrics-ext ..............:30245 (like one port will be there)...
+Open browser, use minikube ip and use this port now
+
+It shows as below:
+    
+    Kube Metrics
+    .Metrics
+    .helathz
+    
+    click Metrics,  you can find lot of metric informations....
+    
+    take any query and put it in prometheus in UI... 
+    which can give us some text format.
+    The same can be given in graphical format using Grafana - thats the speciality of grafana 
+
+
+
+=========================================
+
+27Aug24:
+    
+    Installing Ansible:
+        
+        #python3 --version
+        #yum install ansible -y
+        #ansible --version
+
+PasswordLess Auth:
+    
+    Create user "ansible" in all the nodes
+    master  ~#useradd ansible
+    master ~# passwd ansible      -> note: set the password as "redhat"
+    master ~#su - ansible
+    master  ansible$ ssh-keygen
+    Enter for 3 times...
+     master  ansible$ ssh-copy-id ansible@node1  -> this should be running only in master node
+     
+     ============
+      node1 #useradd ansible
+      node1# passwd ansible      -> note: set the password as "redhat"
+      node1 ~#su - ansible
+     ansible$ ssh-keygen
+     Enter for 3 times...
+     node1  ansible$ 
+     node1  ansible$ ssh-copy-id ansible@node1
+     
+    Continue above steps you have done in node1  for node2 also
+    
+    command to check the user which is created:
+        cat /etc/passwd | grep <username>
+    
+    Results like below:
+        [ansible@master ~]$ ssh ansible@node1
+Activate the web console with: systemctl enable --now cockpit.socket
+
+Last login: Tue Aug 27 10:47:20 2024
+[ansible@node1 ~]$ exit
+logout
+Connection to node1 closed.
+[ansible@master ~]$ ssh ansible@node2
+
+[ansible@node2 ~]$ exit
+logout
+Connection to node2 closed.
+
+
+Sudo Privilege:
+node1# cd /etc/sudoers.d
+node1# vim ansible
+ansible        ALL=(ALL)          NOPASSWD: ALL
+
+---save---
+Verification:
+node1# su - ansible
+node1  ansible$ sudo useradd user100
+node1  ansible$ cat /etc/passwd | tail  -1     >> Just verify the user's creation
+
+Similarly do the same for node2:
+node2# cd /etc/sudoers.d
+node2# vim ansible
+ansible        ALL=(ALL)          NOPASSWD: ALL
+
+---save---
+Verification:
+node2# su - ansible
+node2  ansible$ sudo useradd user100
+node2  ansible$ cat /etc/passwd | tail  -1     >> Just verify the user's creation
+    
+    =============
+
+Create ansible.cfg file
+
+master# su - ansible
+[ansible@master ~]$ vim ansible.cfg
+[defaults]
+inventory=/home/ansible/myinventory2
+remote_user=ansible
+
+[privilege_escalation]
+become=True
+become_method=sudo
+become_user=root
+become_ask_pass=False
+[ansible@master ~]$ 
+-----save------------
+
+Create the inventory
+
+[ansible@master ~]$ vim myinventory2
+node1.example.com
+node2.example.com
+-------save------------------
+
+[ansible@master ~]$ ansible -m user -a 'name=user21 state=present' node1.example.com
+
+-------------Now the user is created -----------
+
+Playbook Creation:
+    
+    
+[ansible@master ~]$ vim simpleplay.yml
+- name: my first play
+  hosts: node1.example.com
+  tasks:
+  - name: my first task
+    user:
+      name: user60
+      state: present
+  - name: my second task
+    yum:
+      name: httpd
+      state: present
+[ansible@master ~]$ 
+[ansible@master ~]$ ansible-playbook simpleplay.yml  --syntax-check     ---> this will give you if any syntax errors available 
+[ansible@master ~]$ ansible-playbook simpleplay.yml
+
+
+
+------------------
+Assessment on Wednesday:
+Fist hour will be MCQ part
+Next 3 hours will be Lab Assessment -  Dockers and Kubernetes questions will be there.   
+Note: Ansible and Helm will be included only in MCQ part not in lab assessment. 
+
+For evaluation purpose, you will need to capture the output and upload on LMS Portal  - as document or screenshots.
+All the Best!!!
+
+
+
