@@ -1,0 +1,78 @@
+[root@master kubernetes]# useradd ansible
+[root@master kubernetes]# passwd ansible
+Changing password for user ansible.
+New password: 
+BAD PASSWORD: The password is shorter than 8 characters
+Retype new password: 
+passwd: all authentication tokens updated successfully.
+[root@master kubernetes]# 
+[root@master kubernetes]# 
+[root@master kubernetes]# su - ansible 
+[ansible@master ~]$ 
+[ansible@master ~]$ 
+[ansible@master ~]$ ssh-keygen 
+Generating public/private rsa key pair.
+Enter file in which to save the key (/home/ansible/.ssh/id_rsa): 
+Created directory '/home/ansible/.ssh'.
+Enter passphrase (empty for no passphrase): 
+Enter same passphrase again: 
+Your identification has been saved in /home/ansible/.ssh/id_rsa.
+Your public key has been saved in /home/ansible/.ssh/id_rsa.pub.
+The key fingerprint is:
+SHA256:j5fmysHQ/I4WPEwp3GMBo/iJGw2ZTfLbb0/yAoAaT14 ansible@master
+The key's randomart image is:
++---[RSA 3072]----+
+|  . . o.         |
+|   O . ..        |
+|  =.+. . o       |
+|. o=E+oo*        |
+| *o.=.o*S.       |
+|. oo  .+=+ .     |
+|  .    .BoB      |
+|       oo%       |
+|       .+o=      |
++----[SHA256]-----+
+[ansible@master ~]$ 
+[ansible@master ~]$ 
+[ansible@master ~]$ ssh-copy-id node1
+/usr/bin/ssh-copy-id: INFO: Source of key(s) to be installed: "/home/ansible/.ssh/id_rsa.pub"
+The authenticity of host 'node1 (10.0.11.168)' can't be established.
+ECDSA key fingerprint is SHA256:Z5i9iLFXxwqbpx8od9pqF7QSxc2lImgnTxbTFm+tRbk.
+Are you sure you want to continue connecting (yes/no/[fingerprint])? yes
+/usr/bin/ssh-copy-id: INFO: attempting to log in with the new key(s), to filter out any that are already installed
+/usr/bin/ssh-copy-id: INFO: 1 key(s) remain to be installed -- if you are prompted now it is to install the new keys
+ansible@node1's password: 
+
+Number of key(s) added: 1
+
+Now try logging into the machine, with:   "ssh 'node1'"
+and check to make sure that only the key(s) you wanted were added.
+
+[ansible@master ~]$ ssh-copy-id node2
+/usr/bin/ssh-copy-id: INFO: Source of key(s) to be installed: "/home/ansible/.ssh/id_rsa.pub"
+The authenticity of host 'node2 (10.0.11.169)' can't be established.
+ECDSA key fingerprint is SHA256:Z5i9iLFXxwqbpx8od9pqF7QSxc2lImgnTxbTFm+tRbk.
+Are you sure you want to continue connecting (yes/no/[fingerprint])? yes
+/usr/bin/ssh-copy-id: INFO: attempting to log in with the new key(s), to filter out any that are already installed
+/usr/bin/ssh-copy-id: INFO: 1 key(s) remain to be installed -- if you are prompted now it is to install the new keys
+ansible@node2's password: 
+
+Number of key(s) added: 1
+
+Now try logging into the machine, with:   "ssh 'node2'"
+and check to make sure that only the key(s) you wanted were added.
+
+[ansible@master ~]$ 
+[ansible@master ~]$ 
+[ansible@master ~]$ 
+[ansible@master ~]$ ssh node1
+Activate the web console with: systemctl enable --now cockpit.socket
+
+[ansible@node1 ~]$ 
+[ansible@node1 ~]$ logout
+Connection to node1 closed.
+[ansible@master ~]$ ssh node2
+Activate the web console with: systemctl enable --now cockpit.socket
+
+[ansible@node2 ~]$ logout
+Connection to node2 closed.
