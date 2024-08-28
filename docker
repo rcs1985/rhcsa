@@ -197,3 +197,22 @@ spec:
 
 d) Screenshot of service. Provide screenshot of the following command:
 kubectl describe svc <service name> -n exkube
+[root@master ~]# kubectl describe svc nginx-service -n exkube
+Name:                     nginx-service
+Namespace:                exkube
+Labels:                   <none>
+Annotations:              <none>
+Selector:                 app=nginx-app
+Type:                     NodePort
+IP Family Policy:         SingleStack
+IP Families:              IPv4
+IP:                       10.96.250.173
+IPs:                      10.96.250.173
+Port:                     <unset>  80/TCP
+TargetPort:               80/TCP
+NodePort:                 <unset>  31202/TCP
+Endpoints:                <none>
+Session Affinity:         None
+External Traffic Policy:  Cluster
+Events:                   <none>
+
