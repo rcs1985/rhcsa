@@ -127,3 +127,5 @@ spec:
         ports:
         - containerPort: 8080
 
+kubectl apply -f echo-exkube-deployment.yaml
+kubectl get deployments -n exkube
