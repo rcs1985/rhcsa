@@ -101,9 +101,8 @@ Make sure that the container should be running in detached mode without any erro
 NAME                  DESCRIPTION                                     STARS     OFFICIAL
 mysql                 MySQL is a widely used, open-source relation…   15326     [OK]
 
-[root@minikube /]# docker run -d --name dbcontainer -e MYSQL_USER=user1 -e MYSQL_PASSWORD=redhat -e MYSQL_DATABASE=mydb mysql
-Unable to find image 'mysql:latest' locally
-latest: Pulling from library/mysql
+[root@master ~]# docker run -d --name dbcontainer -e MYSQL_USER=user1 -e MYSQL_PASSWORD=redhat -e MYSQL_DATABASE=mydb registry.access.redhat.com/rhscl/mysql-57-rhel7
+Emulate Docker CLI using podman. Create /etc/containers/nodocker to quiet msg.
 6e839ac3722d: Pull complete 
 ad912193ad5f: Pull complete 
 25d13d87fd8d: Pull complete 
@@ -114,9 +113,12 @@ ad912193ad5f: Pull complete
 8ffe968b82c1: Pull complete 
 30dfd9a7ed57: Pull complete 
 35844ae33cbe: Pull complete 
-Digest: sha256:86cdfe832c81e39a89cfb63c3fde1683c41cc00ef91e67653c9c1df0ba80f454
-Status: Downloaded newer image for mysql:latest
-e0b31f7d8fe3e4af93dc60a9a0a2473ce4fa5cf0b744bbb8d1ade3bcf1ea9a3d
+2bb625b522958cbd3e85ef6e5f2bea4bd3116ab20d3cdb0d9c7456115bace3e4
+
+[root@master ~]# docker ps
+Emulate Docker CLI using podman. Create /etc/containers/nodocker to quiet msg.
+CONTAINER ID  IMAGE                                                   COMMAND     CREATED        STATUS        PORTS       NAMES
+2bb625b52295  registry.access.redhat.com/rhscl/mysql-57-rhel7:latest  run-mysqld  5 seconds ago  Up 5 seconds              dbcontainer
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 1. Perform the following on your existing cluster
