@@ -1,0 +1,36 @@
+dnf list podman
+   16  dnf install podman
+   17  dnf list podman
+   18  cat /etc/resolv.conf 
+   19  ping 8.8.8.8 -f
+   20  ping 8.8.8.8
+   21  which podman
+   22  cat /etc/hosts
+   23  dnf install podman-docker
+   24  which docker
+   25  dnf info podman-docker
+   26  docker image
+   27  docker images
+   28  docker --version
+   29  podman --version 
+   30  docker 
+   31  clear
+   32  docker images
+   33  exit
+   34  history
+   35  docker images
+   36  w
+   37  docker search ubi
+   38  docker run --name myubi registry.redhat.io/ubi9/ubi
+   39  susbscription identity
+   40  cat /etc/os-release 
+   41  docker run --name myubi registry.redhat.io/ubi9:latest
+   42  ip a
+   43  w
+   44  hostname
+   45  yum search docker
+   46  yum install podman
+   47  yum install podman-docker
+   48  docker run --name myubi registry.redhat.io/ubi9:latest
+   49  docker ps -a
+   50  docker run --name myubi2 registry.redhat.io/ubi9:latest sleep 5
