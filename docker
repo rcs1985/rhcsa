@@ -99,3 +99,5 @@ cd /var/www/html
 ip addr show eth0 | grep "inet " | awk '{print $2}' | cut -d/ -f1
 echo "The IP address of this container is <IP-Address>" > index.html
 exit
+
+docker run --name simplecontainer registry.access.redhat.com/ubi9
