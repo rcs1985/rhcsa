@@ -434,3 +434,8 @@ NAME              READY   STATUS    RESTARTS   AGE
 simple-pod-kube   1/1     Running   0          23s
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+dry-run commands for creating template for pod,service,namespace and deployment,
+kubectl run myweb2 --image=httpd --dry-run=client -o yaml > pod.yml
+kubectl create ns mytcs --dry-run=client -o yaml > ns.yml
+kubectl create deploy nginxsvc  - -image=nginx --dry-run=client -o yaml > nginxsvc.yml
+kubectl create deploy resdeploy  - -image=nginx --dry-run=client -o yaml > resdeploy.yml
