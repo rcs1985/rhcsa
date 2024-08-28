@@ -176,3 +176,24 @@ spec:
         memory: "200Mi"
     ports:
     - containerPort: 80
+
+c) Use Services to load balance between multiple Pods of the app
+Expose the service using the type Nodeport and assign the port number as 31202.
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: nginx-service
+  namespace: machinelearning
+spec:
+  selector:
+    app: nginx-app
+  ports:
+    - protocol: TCP
+      port: 80           # Port that the service will expose
+      targetPort: 80     # Port on the Pods that the service will forward traffic to
+      nodePort: 31202    # NodePort to expose the service on
+  type: NodePort
+
+d) Screenshot of service. Provide screenshot of the following command:
+kubectl describe svc <service name> -n exkube
