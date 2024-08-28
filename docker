@@ -87,3 +87,15 @@ NETWORK ID          NAME                DRIVER
 
 
 docker run -d --name myfirstcontainer -p 8080:8080 registry.access.redhat.com/rhscl/httpd-24-rhe17
+
+Login to the mysecondcontainer, and do the following
+File path: /var/www/html
+Filename: index.html
+Add the text: The Ip address of this container is <<IP-Address>>
+NOTE: <<IP-Address>> refers to the real IP address of that container.
+
+docker exec -it mysecondcontainer bash
+cd /var/www/html
+ip addr show eth0 | grep "inet " | awk '{print $2}' | cut -d/ -f1
+echo "The IP address of this container is <IP-Address>" > index.html
+exit
