@@ -84,3 +84,6 @@ Task 14th Aug
 Emulate Docker CLI using podman. Create /etc/containers/nodocker to quiet msg.
 NETWORK ID          NAME                DRIVER
 2f259bab93aa        podman              bridge
+
+
+docker run -d --name myfirstcontainer -p 8080:8080 registry.access.redhat.com/rhscl/httpd-24-rhe17
