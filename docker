@@ -101,3 +101,5 @@ echo "The IP address of this container is <IP-Address>" > index.html
 exit
 
 docker run --name simplecontainer registry.access.redhat.com/ubi9
+
+docker run -d --name dbcontainer -e MYSQL_USER=user1 -e MYSQL_PASSWORD=redhat -e MYSQL_DATABASE=mydb mysql
