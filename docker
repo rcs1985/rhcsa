@@ -79,3 +79,8 @@ Task 14th Aug
  
  #docker build -t webimg .
  #docker images
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+[root@nodel ~]# docker network ls
+Emulate Docker CLI using podman. Create /etc/containers/nodocker to quiet msg.
+NETWORK ID          NAME                DRIVER
+2f259bab93aa        podman              bridge
