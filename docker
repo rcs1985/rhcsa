@@ -64,4 +64,19 @@ Webpage created from host machine - Admin
 #curl localhost:8085
 Webpage created from host machine - Admin (your result)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Task 14th Aug
+#docker run -d --name mydb3 -e MYSQL_USER=user1 -e MYSQL_PASSWORD=redhat -e MYSQL_DATABASE=mydb registry.access.redhat.com/rhscl/mariadb-101-rhel7
+ =======
+ #cat Containerfile
+ FROM docker.io/redhat/ubi8
+ LABEL description='A test webserver'
+ RUN yum install -y httpd &&
+     yum clean all 
+ RUN echo "New webimage" > /var/www/html/index.html
+ EXPOSE 80
+ CMD ["httpd", "-D", "FOREGROUND"]
+ 
+[9:40 AM] Murali (Trainer) (Unverified)
 
+#docker build -t webimg .
+ #docker images
