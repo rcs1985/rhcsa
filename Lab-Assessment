@@ -10,8 +10,21 @@ image: httpd
 mode: detached
 host OS Port: 8880 (find the target port by inspecting the container)
 
-
-
+[root@minikube ~]# docker run -d --name myfirstcontainer -p 8080:8080 registry.access.redhat.com/rhscl/httpd-24-rhel7
+Unable to find image 'registry.access.redhat.com/rhscl/httpd-24-rhel7:latest' locally
+latest: Pulling from rhscl/httpd-24-rhel7
+7f2c2c4492b6: Pull complete 
+ea092d7970b2: Pull complete 
+fd77da0b900b: Pull complete 
+Digest: sha256:22081b992327f1366f86af014c6b9e0c89026562491fd1b0b988e9e4b2919462
+Status: Downloaded newer image for registry.access.redhat.com/rhscl/httpd-24-rhel7:latest
+0058c7183dd495f54d8731f5c8481734f727a7f5e99511d2b8c341180c468cd5
+[root@minikube ~]# docker ps
+CONTAINER ID   IMAGE                                             COMMAND                  CREATED         STATUS         PORTS                                                 NAMES
+0058c7183dd4   registry.access.redhat.com/rhscl/httpd-24-rhel7   "container-entrypoin…"   5 seconds ago   Up 3 seconds   0.0.0.0:8080->8080/tcp, :::8080->8080/tcp, 8443/tcp   myfirstcontainer
+[root@minikube ~]# docker inspect myfirstcontainer |grep expose
+                "io.openshift.expose-services": "8080:http,8443:https",
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 2. Create your second container with the following details,
 Container Name: mysecondcontainer
 Image: httpd
@@ -20,27 +33,91 @@ host OS Port: 8888  (find the target port by inspecting the container)
 volume hostPath: /webcontent/html
 Volume target Path: /var/www/html
 
-
+[root@master ~]# docker run -d --name mysecondcontainer -p 8888:8080 -v /root/webcontent:/var/www:Z registry.access.redhat.com/rhscl/httpd-24-rhel7
+Emulate Docker CLI using podman. Create /etc/containers/nodocker to quiet msg.
+f719dd7fd8e38b7fce123a0aba0497d7351a40c153360c2dcd3b1cede94713fd
+[root@master ~]# docker ps
+Emulate Docker CLI using podman. Create /etc/containers/nodocker to quiet msg.
+CONTAINER ID  IMAGE                                                   COMMAND               CREATED        STATUS        PORTS                   NAMES
+f719dd7fd8e3  registry.access.redhat.com/rhscl/httpd-24-rhel7:latest  /usr/bin/run-http...  3 seconds ago  Up 2 seconds  0.0.0.0:8888->8080/tcp  mysecondcontainer
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 3. Login to the mysecondcontainer, and do the following
 File path: /var/www/html
 Filename: index.html
 Add the text: The Ip address of this container is <<IP-Address>>
 NOTE: <<IP-Address>> refers to the real IP address of that container.
 
-
+[root@master ~]# docker exec -it mysecondcontainer bash
+Emulate Docker CLI using podman. Create /etc/containers/nodocker to quiet msg.
+[root@master html]# docker inspect mysecondcontainer |grep -i ipaddress
+Emulate Docker CLI using podman. Create /etc/containers/nodocker to quiet msg.
+               "IPAddress": "10.88.0.3",
+                         "IPAddress": "10.88.0.3",
+[root@master html]# vi index.html
+[root@master html]# cat index.html 
+The IP address of host is 10.88.0.3
+[root@master html]# curl localhost:8888
+The IP address of host is 10.88.0.3
+[root@master html]# cat index.html 
+The IP address of host is 10.88.0.3
+[root@master html]# vi index.html
+[root@master html]# docker exec -it mysecondcontainer bash
+Emulate Docker CLI using podman. Create /etc/containers/nodocker to quiet msg.
+bash-4.2$ cd /var/www/html/
+bash-4.2$ ls -lrt
+total 4
+-rw-r--r--. 1 root root 41 Aug 28 06:29 index.html
+bash-4.2$ curl localhost:8080
+The IP address of container is 10.88.0.3
+bash-4.2$ exit
+exit
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 4. Create a simplecontainer by using ubi image;
 ContainerName: simplecontainer
 Image: ubi (search and find)
 Show that the container should be running for the next 100seconds
 
-
+[root@minikube /]# docker run --name simplecontainer registry.access.redhat.com/ubi9 sleep 100
+Unable to find image 'registry.access.redhat.com/ubi9:latest' locally
+latest: Pulling from ubi9
+b18b624f97a4: Pull complete 
+Digest: sha256:9e6a89ab2a9224712391c77fab2ab01009e387aff42854826427aaf18b98b1ff
+Status: Downloaded newer image for registry.access.redhat.com/ubi9:latest
+[root@minikube /]# docker ps
+CONTAINER ID   IMAGE     COMMAND              CREATED          STATUS          PORTS                                               NAMES
+bcdb91279381   httpd     "httpd-foreground"   25 minutes ago   Up 25 minutes   80/tcp, 0.0.0.0:8888->8080/tcp, :::8888->8080/tcp   mysecondcontainer
+[root@minikube /]# docker ps -a
+CONTAINER ID   IMAGE                                 COMMAND                  CREATED              STATUS                      PORTS                                               NAMES
+6b411b2d1694   registry.access.redhat.com/ubi9       "sleep 100"              About a minute ago   Exited (0) 6 seconds ago                                                        simplecontainer
+bcdb91279381   httpd                                 "httpd-foreground"       25 minutes ago       Up 25 minutes               80/tcp, 0.0.0.0:8888->8080/tcp, :::8888->8080/tcp   mysecondcontainer
+fe7fd2838957   gcr.io/k8s-minikube/kicbase:v0.0.44   "/usr/local/bin/entr…"   2 days ago           Exited (137) 39 hours ago                                                       minikube
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 5. Create a db container as per the below requirements;
 ConatinerName: dbcontainer
 Image: mysql (search and find)
 Make sure that the container should be running in detached mode without any errors.
 
+[root@minikube /]# docker search mysql
+NAME                  DESCRIPTION                                     STARS     OFFICIAL
+mysql                 MySQL is a widely used, open-source relation…   15326     [OK]
 
-
+[root@minikube /]# docker run -d --name dbcontainer -e MYSQL_USER=user1 -e MYSQL_PASSWORD=redhat -e MYSQL_DATABASE=mydb mysql
+Unable to find image 'mysql:latest' locally
+latest: Pulling from library/mysql
+6e839ac3722d: Pull complete 
+ad912193ad5f: Pull complete 
+25d13d87fd8d: Pull complete 
+004d383c75ef: Pull complete 
+6d9bbc82a0b8: Pull complete 
+81fec07ea550: Pull complete 
+83357cb2d3a5: Pull complete 
+8ffe968b82c1: Pull complete 
+30dfd9a7ed57: Pull complete 
+35844ae33cbe: Pull complete 
+Digest: sha256:86cdfe832c81e39a89cfb63c3fde1683c41cc00ef91e67653c9c1df0ba80f454
+Status: Downloaded newer image for mysql:latest
+e0b31f7d8fe3e4af93dc60a9a0a2473ce4fa5cf0b744bbb8d1ade3bcf1ea9a3d
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 1. Perform the following on your existing cluster
 a) Create the namespace exkube
@@ -50,32 +127,242 @@ Container Image: registry.k8s.io/echoserver:1.9  (use httpd or nginx image if th
 Container Name: echo-exkube-cont
 Label: app=echo-studentX
 
+[root@master ~]# kubectl create namespace exkube
+namespace/exkube created
+[root@master ~]# kubectl get namespace
+NAME              STATUS   AGE
+default           Active   11d
+exkube            Active   7s
+
+[root@master ~]# vi echoserver-deployment.yml
+[root@master ~]# cat echoserver-deployment.yml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: echo-exkube
+  namespace: exkube
+  labels:
+    app: echo-studentX
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: echo-studentX
+  template:
+    metadata:
+      labels:
+        app: echo-studentX
+    spec:
+      containers:
+      - name: echo-exkube-cont
+        image: registry.k8s.io/echoserver:1.9
+        ports:
+        - containerPort: 8080
+
+[root@master ~]# kubectl apply -f echoserver-deployment.yml
+deployment.apps/echo-exkube created
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 c) Once the deployment is successfully created and the pod status is RUNNING, take a screenshot of the below command and paste below:
 kubectl get all -n exkube
 
+root@master ~]# kubectl config set-context --current --namespace=exkube
+Context "kubernetes-admin@kubernetes" modified.
+[root@master ~]# kubectl get pod
+NAME                           READY   STATUS    RESTARTS   AGE
+echo-exkube-758dd79598-qchg6   1/1     Running   0          3m33s
+
+[root@master ~]# kubectl get deployments -n exkube
+NAME          READY   UP-TO-DATE   AVAILABLE   AGE
+echo-exkube   1/1     1            1           17s
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 d) Scale the application
 Scale the application to have 3 replicas.
 
+[root@master ~]# kubectl scale deployment echo-exkube --replicas=3 -n exkube
+deployment.apps/echo-exkube scaled
+[root@master ~]# kubectl get all -n exkube
+NAME                               READY   STATUS    RESTARTS   AGE
+pod/echo-exkube-758dd79598-hgrnh   1/1     Running   0          8s
+pod/echo-exkube-758dd79598-qchg6   1/1     Running   0          8m58s
+pod/echo-exkube-758dd79598-wnlrr   1/1     Running   0          8s
+
+NAME                          READY   UP-TO-DATE   AVAILABLE   AGE
+deployment.apps/echo-exkube   3/3     3            3           17m
+
+NAME                                     DESIRED   CURRENT   READY   AGE
+replicaset.apps/echo-exkube-64499f6998   0         0         0       17m
+replicaset.apps/echo-exkube-758dd79598   3         3         3       8m59s
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 c) Use Services to load balance between multiple Pods of the app
 Expose the service using the type Nodeport and assign the port number as 31202.
-
+[root@master ~]# cat podsvc.yml
+apiVersion: v1
+kind: Service
+metadata:
+  name: nginx-service
+  namespace: machinelearning
+spec:
+  selector:
+    app: nginx-app
+  ports:
+    - protocol: TCP
+      port: 80           
+      targetPort: 80    
+      nodePort: 31202 
+  type: NodePort
+[root@master ~]# kubectl apply -f podsvc.yml
+service/nginx-service created
+[root@master ~]# kubectl get svc
+No resources found in machinelearning namespace.
+[root@master ~]# kubectl get svc -n excube
+No resources found in excube namespace.
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 d) Screenshot of service. Provide screenshot of the following command:
 kubectl describe svc <service name> -n exkube
-
-
+[root@master ~]# kubectl get svc -n exkube
+NAME            TYPE       CLUSTER-IP      EXTERNAL-IP   PORT(S)        AGE
+nginx-service   NodePort   10.96.250.173   <none>        80:31202/TCP   23s
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 2. Create a pod using the following specifications:
 Name: random-logger-studentX
 Image: chentex/random-logger  (use httpd or nginx image if this is image is not working for you)
 Namespace: default
 
+[root@master ~]# vi pod.yml
+[root@master ~]# 
+[root@master ~]# cat pod.yml
+apiVersion: v1
+kind: Pod
+metadata:
+  creationTimestamp: null
+  labels:
+    run: myweb2
+  name: random-logger-studentx
+spec:
+  containers:
+  - image: chentx/random-logger
+    name: random-logger-studentx 
+    resources: {}
+  dnsPolicy: ClusterFirst
+  restartPolicy: Always
+status: {}
 
+root@master ~]# kubectl apply -f pod.yml
+pod/random-logger-studentx created
+[root@master ~]# kubectl get pod
+NAME                     READY   STATUS         RESTARTS   AGE
+random-logger-studentx   0/1     ErrImagePull   0          10s
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 3. Create a nginx pod such that the pod always runs on node2
 Name: nginx-studentX-pod
 Namespace: mytcs
 Node: node2
 
-4. Provide screenshot of the command that shows nginx pod you created in previous Question is running in your cluster.
+[root@master ~]# vi pod2.yml
+[root@master ~]# cat pod2.yml 
+apiVersion: v1
+kind: Pod
+metadata:
+  name: nginx-studentx-pod
+  namespace: mytcs
+spec:
+  containers:
+  - name: nginx-container
+    image: nginx:latest
+    ports:
+    - containerPort: 80
+  nodeSelector:
+    kubernetes.io/hostname: node2
+[root@master ~]# kubectl apply -f pod2.yml
+pod/nginx-studentx-pod created
+[root@master ~]# kubectl get pods -n mytcs
+NAME                 READY   STATUS    RESTARTS   AGE
+nginx-studentx-pod   1/1     Running   0          24s
 
+[root@master ~]# kubectl config set-context --current --namespace=mytcs
+Context "kubernetes-admin@kubernetes" modified.
+[root@master ~]# kubectl get pod -o wide
+NAME                 READY   STATUS    RESTARTS   AGE   IP             NODE    NOMINATED NODE   READINESS GATES
+nginx-studentx-pod   1/1     Running   0          20m   192.168.0.12   node2   <none>           <none>
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+4. Provide screenshot of the command that shows nginx pod you created in previous Question is running in your cluster.
+[root@master ~]# kubectl get pod -A
+NAMESPACE      NAME                             READY   STATUS             RESTARTS         AGE
+default        random-logger-studentx           0/1     ImagePullBackOff   0                8m22s
+exkube         echo-exkube-758dd79598-hgrnh     1/1     Running            0                19m
+exkube         echo-exkube-758dd79598-qchg6     1/1     Running            0                28m
+exkube         echo-exkube-758dd79598-wnlrr     1/1     Running            0                19m
+kube-flannel   kube-flannel-ds-586r8            1/1     Running            7 (6h53m ago)    12d
+kube-flannel   kube-flannel-ds-hw9qv            1/1     Running            4 (6h53m ago)    4d23h
+kube-flannel   kube-flannel-ds-kxkt4            1/1     Running            13 (6h52m ago)   12d
+kube-system    coredns-76f75df574-kpkf6         1/1     Running            6 (6h53m ago)    12d
+kube-system    coredns-76f75df574-ntblz         1/1     Running            6 (6h53m ago)    12d
+kube-system    etcd-master                      1/1     Running            6 (6h53m ago)    12d
+kube-system    kube-apiserver-master            1/1     Running            6 (6h53m ago)    12d
+kube-system    kube-controller-manager-master   1/1     Running            6 (6h53m ago)    12d
+kube-system    kube-proxy-7cs7v                 1/1     Running            6 (6h53m ago)    12d
+kube-system    kube-proxy-7wfw8                 1/1     Running            6 (6h52m ago)    12d
+kube-system    kube-proxy-c6nnl                 1/1     Running            6 (6h53m ago)    12d
+kube-system    kube-scheduler-master            1/1     Running            6 (6h53m ago)    12d
+mytcs          nginx-studentx-pod               1/1     Running            0                2m3s
+[root@master ~]# 
+[root@master ~]# kubectl describe pod random-logger-studentx
+Name:             random-logger-studentx
+Namespace:        default
+Priority:         0
+Service Account:  default
+Node:             node1/10.0.11.168
+Start Time:       Wed, 28 Aug 2024 12:55:48 +0530
+Labels:           run=myweb2
+Annotations:      <none>
+Status:           Pending
+IP:               192.168.0.4
+IPs:
+  IP:  192.168.0.4
+Containers:
+  random-logger-studentx:
+    Container ID:   
+    Image:          chentx/random-logger
+    Image ID:       
+    Port:           <none>
+    Host Port:      <none>
+    State:          Waiting
+      Reason:       ImagePullBackOff
+    Ready:          False
+    Restart Count:  0
+    Environment:    <none>
+    Mounts:
+      /var/run/secrets/kubernetes.io/serviceaccount from kube-api-access-kqbck (ro)
+Conditions:
+  Type                        Status
+  PodReadyToStartContainers   True 
+  Initialized                 True 
+  Ready                       False 
+  ContainersReady             False 
+  PodScheduled                True 
+Volumes:
+  kube-api-access-kqbck:
+    Type:                    Projected (a volume that contains injected data from multiple sources)
+    TokenExpirationSeconds:  3607
+    ConfigMapName:           kube-root-ca.crt
+    ConfigMapOptional:       <nil>
+    DownwardAPI:             true
+QoS Class:                   BestEffort
+Node-Selectors:              <none>
+Tolerations:                 node.kubernetes.io/not-ready:NoExecute op=Exists for 300s
+                             node.kubernetes.io/unreachable:NoExecute op=Exists for 300s
+Events:
+  Type     Reason     Age                     From               Message
+  ----     ------     ----                    ----               -------
+  Normal   Scheduled  9m27s                   default-scheduler  Successfully assigned default/random-logger-studentx to node1
+  Normal   Pulling    7m50s (x4 over 9m26s)   kubelet            Pulling image "chentx/random-logger"
+  Warning  Failed     7m48s (x4 over 9m24s)   kubelet            Failed to pull image "chentx/random-logger": failed to pull and unpack image "docker.io/chentx/random-logger:latest": failed to resolve reference "docker.io/chentx/random-logger:latest": pull access denied, repository does not exist or may require authorization: server message: insufficient_scope: authorization failed
+  Warning  Failed     7m48s (x4 over 9m24s)   kubelet            Error: ErrImagePull
+  Warning  Failed     7m37s (x6 over 9m23s)   kubelet            Error: ImagePullBackOff
+  Normal   BackOff    4m19s (x20 over 9m23s)  kubelet            Back-off pulling image "chentx/random-logger"
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 5. Create the Pod as per the following specifications:
 Name: simple-pod-kube
 Namespace: machinelearning
@@ -83,3 +370,65 @@ Maximum CPU: 750m
 Maximum Memory: 500Mi
 (use httpd or nginx image)
 
+[root@master ~]# kubectl create namespace machinelearning
+namespace/machinelearning created
+[root@master ~]# kubectl get namespace
+NAME              STATUS   AGE
+default           Active   12d
+exkube            Active   61m
+kube-flannel      Active   12d
+kube-node-lease   Active   12d
+kube-public       Active   12d
+kube-system       Active   12d
+machinelearning   Active   12s
+mytcs             Active   7d2h
+
+[root@master ~]# cat simple-pod-kube.yml 
+apiVersion: v1
+kind: Pod
+metadata:
+  name: simple-pod-kube
+  namespace: machinelearning
+spec:
+  containers:
+  - name: nginx-container
+    image: nginx:latest
+    resources:
+      limits:
+        cpu: "750m"
+        memory: "500Mi"
+      requests:
+        cpu: "250m"
+        memory: "200Mi"
+    ports:
+    - containerPort: 80
+[root@master ~]# kubectl apply -f simple-pod-kube.yml
+pod/simple-pod-kube created
+[root@master ~]# kubectl get pod
+NAME                     READY   STATUS             RESTARTS   AGE
+random-logger-studentx   0/1     ImagePullBackOff   0          23m
+[root@master ~]# kubectl get pod -A
+NAMESPACE         NAME                             READY   STATUS             RESTARTS        AGE
+default           random-logger-studentx           0/1     ImagePullBackOff   0               24m
+exkube            echo-exkube-758dd79598-hgrnh     1/1     Running            0               34m
+exkube            echo-exkube-758dd79598-qchg6     1/1     Running            0               43m
+exkube            echo-exkube-758dd79598-wnlrr     1/1     Running            0               34m
+kube-flannel      kube-flannel-ds-586r8            1/1     Running            7 (7h9m ago)    12d
+kube-flannel      kube-flannel-ds-hw9qv            1/1     Running            4 (7h8m ago)    4d23h
+kube-flannel      kube-flannel-ds-kxkt4            1/1     Running            13 (7h8m ago)   12d
+kube-system       coredns-76f75df574-kpkf6         1/1     Running            6 (7h9m ago)    12d
+kube-system       coredns-76f75df574-ntblz         1/1     Running            6 (7h9m ago)    12d
+kube-system       etcd-master                      1/1     Running            6 (7h9m ago)    12d
+kube-system       kube-apiserver-master            1/1     Running            6 (7h9m ago)    12d
+kube-system       kube-controller-manager-master   1/1     Running            6 (7h9m ago)    12d
+kube-system       kube-proxy-7cs7v                 1/1     Running            6 (7h8m ago)    12d
+kube-system       kube-proxy-7wfw8                 1/1     Running            6 (7h8m ago)    12d
+kube-system       kube-proxy-c6nnl                 1/1     Running            6 (7h9m ago)    12d
+kube-system       kube-scheduler-master            1/1     Running            6 (7h9m ago)    12d
+machinelearning   simple-pod-kube                  1/1     Running            0               12s
+mytcs             nginx-studentx-pod               1/1     Running            0               17m
+[root@master ~]# kubectl get pod -n machinelearning
+NAME              READY   STATUS    RESTARTS   AGE
+simple-pod-kube   1/1     Running   0          23s
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
