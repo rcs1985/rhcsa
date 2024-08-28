@@ -29,8 +29,39 @@ dnf list podman
    43  w
    44  hostname
    45  yum search docker
-   46  yum install podman
+  46  yum install podman
    47  yum install podman-docker
    48  docker run --name myubi registry.redhat.io/ubi9:latest
    49  docker ps -a
    50  docker run --name myubi2 registry.redhat.io/ubi9:latest sleep 5
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~`
+ Docker container with an HTTP server, creating a simple HTML file, and testing the server.
+   docker ps -> make sure nothing is running
+   docker run -d --name myweb5 -p 8080:8080 registry.access.redhat.com/rhscl/httpd-24-rhe17
+   docker exec -it myweb5 bash
+
+   $cd /var/www/html (inside the container)
+   $cat >index.html
+      Welcome to DevOps!!!
+
+   $curl localhost:8080
+   $exit
+   #docker ps
+   #curl localhost:8080
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+setting up a Docker container with a web server, creating a simple HTML file from the host machine, and testing the server.
+#docker ps -> clear all the containers
+#docker ps -a -> clear everything
+#pwd
+~/root
+#mkdir -p webcontent/html
+#cd webcontent/html
+$cat > index.html
+Webpage created from host machine - Admin
+^D
+#docker run -d --name mywebPMVM -p 8085:8080 -v /root/webcontent:/var/www:Z registry.access.redhat.com/rhcs1/httpd-24-rhel7
+#docker ps
+#curl localhost:8085
+Webpage created from host machine - Admin (your result)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
