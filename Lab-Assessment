@@ -1,0 +1,85 @@
+Final Lab assessment 28-08-24
+Instrucions:
+Please read the questions given below and execute them.
+Each questions have different weightages.
+caputure the screenshots and provide the same as evidence
+
+1. Create your first container with the following details,
+Container Name: myfirstcontainer
+image: httpd
+mode: detached
+host OS Port: 8880 (find the target port by inspecting the container)
+
+
+
+2. Create your second container with the following details,
+Container Name: mysecondcontainer
+Image: httpd
+mode: detached
+host OS Port: 8888  (find the target port by inspecting the container)
+volume hostPath: /webcontent/html
+Volume target Path: /var/www/html
+
+
+3. Login to the mysecondcontainer, and do the following
+File path: /var/www/html
+Filename: index.html
+Add the text: The Ip address of this container is <<IP-Address>>
+NOTE: <<IP-Address>> refers to the real IP address of that container.
+
+
+4. Create a simplecontainer by using ubi image;
+ContainerName: simplecontainer
+Image: ubi (search and find)
+Show that the container should be running for the next 100seconds
+
+
+5. Create a db container as per the below requirements;
+ConatinerName: dbcontainer
+Image: mysql (search and find)
+Make sure that the container should be running in detached mode without any errors.
+
+
+
+
+1. Perform the following on your existing cluster
+a) Create the namespace exkube
+b) Deploy and start the echoserver application in exkube namespace as per below instruction:
+Deployment Name: echo-exkube
+Container Image: registry.k8s.io/echoserver:1.9  (use httpd or nginx image if this is image is not working for you)
+Container Name: echo-exkube-cont
+Label: app=echo-studentX
+
+c) Once the deployment is successfully created and the pod status is RUNNING, take a screenshot of the below command and paste below:
+kubectl get all -n exkube
+
+d) Scale the application
+Scale the application to have 3 replicas.
+
+c) Use Services to load balance between multiple Pods of the app
+Expose the service using the type Nodeport and assign the port number as 31202.
+
+d) Screenshot of service. Provide screenshot of the following command:
+kubectl describe svc <service name> -n exkube
+
+
+2. Create a pod using the following specifications:
+Name: random-logger-studentX
+Image: chentex/random-logger  (use httpd or nginx image if this is image is not working for you)
+Namespace: default
+
+
+3. Create a nginx pod such that the pod always runs on node2
+Name: nginx-studentX-pod
+Namespace: mytcs
+Node: node2
+
+4. Provide screenshot of the command that shows nginx pod you created in previous Question is running in your cluster.
+
+5. Create the Pod as per the following specifications:
+Name: simple-pod-kube
+Namespace: machinelearning
+Maximum CPU: 750m
+Maximum Memory: 500Mi
+(use httpd or nginx image)
+
