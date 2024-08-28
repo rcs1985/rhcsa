@@ -129,3 +129,5 @@ spec:
 
 kubectl apply -f echo-exkube-deployment.yaml
 kubectl get deployments -n exkube
+kubectl get all -n exkube
+kubectl scale deployment echo-exkube --replicas=3 -n exkube
